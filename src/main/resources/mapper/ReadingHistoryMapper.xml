@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cetide.blog.mapper.ReadingHistoryMapper">
+
+    <!-- 基本的结果映射 -->
+    <resultMap id="ReadingHistoryResultMap" type="com.cetide.blog.model.entity.user.ReadingHistory">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="article_id" property="articleId"/>
+        <result column="read_at" property="readAt"/>
+        <result column="reading_time" property="readingTime"/>
+        <result column="status" property="status"/>
+        <result column="device" property="device"/>
+        <result column="browser" property="browser"/>
+        <result column="article_category_id" property="articleCategoryId"/>
+        <result column="tags" property="tags" />
+    </resultMap>
+
+    <!-- 插入阅读历史 -->
+    <insert id="insertReadingHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cetide_blog.reading_history
+        (user_id, article_id, read_at, reading_time, status, device, browser, article_category_id, tags)
+        VALUES
+            (#{userId}, #{articleId}, #{readAt}, #{readingTime}, #{status}, #{device}, #{browser}, #{articleCategoryId}, #{tags, jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 查询阅读历史 -->
+    <select id="getReadingHistoryByUserIdAndArticleId" resultMap="ReadingHistoryResultMap">
+        SELECT * FROM cetide_blog.reading_history
+        WHERE user_id = #{userId} AND article_id = #{articleId}
+    </select>
+
+    <!-- 更新阅读历史 -->
+    <update id="updateReadingHistory">
+        UPDATE cetide_blog.reading_history
+        SET
+            read_at = #{readAt},
+            reading_time = #{readingTime},
+            status = #{status},
+            device = #{device},
+            browser = #{browser},
+            article_category_id = #{articleCategoryId},
+            tags = #{tags, jdbcType=VARCHAR}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除阅读历史 -->
+    <delete id="deleteReadingHistory">
+        DELETE FROM cetide_blog.reading_history
+        WHERE id = #{id}
+    </delete>
+</mapper> 

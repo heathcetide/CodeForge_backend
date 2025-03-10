@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetide.blog.mapper.NotificationMapper">
+    <resultMap id="BaseResultMap" type="com.cetide.blog.model.entity.notification.Notification">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId"/>
+        <result column="type" property="type"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="level" property="level"/>
+        <result column="read" property="read"/>
+        <result column="business_id" property="businessId"/>
+        <result column="business_type" property="businessType"/>
+        <result column="extra_data" property="extraData"/>
+        <result column="send_time" property="sendTime"/>
+        <result column="read_time" property="readTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, `type`, title, content, `level`, `read`, business_id, business_type, extra_data, send_time, read_time
+    </sql>
+</mapper>

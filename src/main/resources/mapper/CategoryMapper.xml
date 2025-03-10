@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetide.blog.mapper.CategoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.cetide.blog.model.entity.Category">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="parent_category_id" property="parentCategoryId"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cetide_blog.category (name, description, parent_category_id, created_at, updated_at, deleted)
+        VALUES (#{name}, #{description}, #{parentCategoryId}, #{createdAt}, #{updatedAt}, #{deleted})
+    </insert>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM cetide_blog.category WHERE id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM cetide_blog.category WHERE deleted = 0
+    </select>
+
+    <update id="updateById">
+        UPDATE cetide_blog.category
+        SET name = #{name}, description = #{description}, parent_category_id = #{parentCategoryId}, updated_at = #{updatedAt}, deleted = #{deleted}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

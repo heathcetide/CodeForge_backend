@@ -1,0 +1,108 @@
+2025-03-10 12:44:13 [main] INFO  com.cetide.blog.BlogApplication - Starting BlogApplication using Java 21.0.5 on LAPTOP-VLB0GC6G with PID 17164 (C:\Users\Lenovo\Desktop\cetide_blog\target\classes started by Lenovo in C:\Users\Lenovo\Desktop\cetide_blog)
+2025-03-10 12:44:13 [main] INFO  com.cetide.blog.BlogApplication - The following profiles are active: dev
+2025-03-10 12:44:13 [background-preinit] WARN  o.s.h.c.j.Jackson2ObjectMapperBuilder - For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+2025-03-10 12:44:14 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-03-10 12:44:14 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-03-10 12:44:14 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 84 ms. Found 0 Redis repository interfaces.
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'activityMapper' and 'com.cetide.blog.mapper.ActivityMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'articleActivityRecordMapper' and 'com.cetide.blog.mapper.ArticleActivityRecordMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'articleMapper' and 'com.cetide.blog.mapper.ArticleMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'categoryMapper' and 'com.cetide.blog.mapper.CategoryMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'commentMapper' and 'com.cetide.blog.mapper.CommentMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'followerMapper' and 'com.cetide.blog.mapper.FollowerMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'notificationMapper' and 'com.cetide.blog.mapper.NotificationMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'passwordHistoryMapper' and 'com.cetide.blog.mapper.PasswordHistoryMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'readingHistoryMapper' and 'com.cetide.blog.mapper.ReadingHistoryMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'tagMapper' and 'com.cetide.blog.mapper.TagMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'userMapper' and 'com.cetide.blog.mapper.UserMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:44:14 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.cetide.blog.mapper]' package. Please check your configuration.
+2025-03-10 12:44:14 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'securityEventConfig' of type [com.cetide.blog.common.security.event.SecurityEventConfig$$EnhancerBySpringCGLIB$$80a9bb41] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2025-03-10 12:44:15 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-03-10 12:44:15 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-03-10 12:44:15 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.45]
+2025-03-10 12:44:15 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-03-10 12:44:15 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2377 ms
+2025-03-10 12:44:16 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-03-10 12:44:17 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-03-10 12:44:18 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'commentController': Invocation of init method failed; nested exception is com.cetide.blog.exception.BusinessException: 用户不存在
+2025-03-10 12:44:18 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-03-10 12:44:18 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-03-10 12:44:18 [main] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-03-10 12:44:18 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2025-03-10 12:44:18 [main] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'commentController': Invocation of init method failed; nested exception is com.cetide.blog.exception.BusinessException: 用户不存在
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:160)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:422)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1778)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:782)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:774)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1340)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1329)
+	at com.cetide.blog.BlogApplication.main(BlogApplication.java:16)
+Caused by: com.cetide.blog.exception.BusinessException: 用户不存在
+	at com.cetide.blog.service.impl.UserServiceImpl.getUserById(UserServiceImpl.java:349)
+	at com.cetide.blog.service.impl.UserServiceImpl$$FastClassBySpringCGLIB$$8cdd4898.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:688)
+	at com.cetide.blog.service.impl.UserServiceImpl$$EnhancerBySpringCGLIB$$6fc79a23.getUserById(<generated>)
+	at com.cetide.blog.controller.CommentController.init(CommentController.java:49)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:389)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:333)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:157)
+	... 19 common frames omitted
+2025-03-10 12:45:55 [main] INFO  com.cetide.blog.BlogApplication - Starting BlogApplication using Java 21.0.5 on LAPTOP-VLB0GC6G with PID 3160 (C:\Users\Lenovo\Desktop\cetide_blog\target\classes started by Lenovo in C:\Users\Lenovo\Desktop\cetide_blog)
+2025-03-10 12:45:55 [main] INFO  com.cetide.blog.BlogApplication - The following profiles are active: dev
+2025-03-10 12:45:56 [background-preinit] WARN  o.s.h.c.j.Jackson2ObjectMapperBuilder - For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+2025-03-10 12:45:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-03-10 12:45:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-03-10 12:45:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 117 ms. Found 0 Redis repository interfaces.
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'activityMapper' and 'com.cetide.blog.mapper.ActivityMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'articleActivityRecordMapper' and 'com.cetide.blog.mapper.ArticleActivityRecordMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'articleMapper' and 'com.cetide.blog.mapper.ArticleMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'categoryMapper' and 'com.cetide.blog.mapper.CategoryMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'commentMapper' and 'com.cetide.blog.mapper.CommentMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'followerMapper' and 'com.cetide.blog.mapper.FollowerMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'notificationMapper' and 'com.cetide.blog.mapper.NotificationMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'passwordHistoryMapper' and 'com.cetide.blog.mapper.PasswordHistoryMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'readingHistoryMapper' and 'com.cetide.blog.mapper.ReadingHistoryMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'tagMapper' and 'com.cetide.blog.mapper.TagMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - Skipping MapperFactoryBean with name 'userMapper' and 'com.cetide.blog.mapper.UserMapper' mapperInterface. Bean already defined with the same name!
+2025-03-10 12:45:57 [main] WARN  o.m.s.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.cetide.blog.mapper]' package. Please check your configuration.
+2025-03-10 12:45:57 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'securityEventConfig' of type [com.cetide.blog.common.security.event.SecurityEventConfig$$EnhancerBySpringCGLIB$$b34651af] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2025-03-10 12:45:58 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-03-10 12:45:58 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-03-10 12:45:58 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.45]
+2025-03-10 12:45:58 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-03-10 12:45:58 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2815 ms
+2025-03-10 12:46:00 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-03-10 12:46:02 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-03-10 12:46:03 [main] INFO  o.s.b.f.a.AutowiredAnnotationBeanPostProcessor - Autowired annotation is not supported on static fields: private static double com.cetide.blog.util.AlgorithmUtils.randomnessFactor
+2025-03-10 12:46:04 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoint(s) beneath base path '/actuator'
+2025-03-10 12:46:04 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService
+2025-03-10 12:46:04 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'taskExecutor'
+2025-03-10 12:46:04 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'threadPoolTaskExecutor'
+2025-03-10 12:46:05 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-03-10 12:46:06 [main] INFO  com.cetide.blog.BlogApplication - Started BlogApplication in 10.692 seconds (JVM running for 11.545)
+2025-03-10 12:46:06 [RMI TCP Connection(2)-192.168.134.1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-03-10 12:46:06 [RMI TCP Connection(2)-192.168.134.1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-03-10 12:46:06 [RMI TCP Connection(2)-192.168.134.1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-03-10 12:50:00 [SpringContextShutdownHook] INFO  o.s.s.c.ThreadPoolTaskExecutor - Shutting down ExecutorService 'threadPoolTaskExecutor'
+2025-03-10 12:50:00 [SpringContextShutdownHook] INFO  o.s.s.c.ThreadPoolTaskExecutor - Shutting down ExecutorService 'taskExecutor'
+2025-03-10 12:50:00 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-03-10 12:50:00 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

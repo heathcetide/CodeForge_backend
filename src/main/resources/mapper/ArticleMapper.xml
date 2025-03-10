@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetide.blog.mapper.ArticleMapper">
+    <resultMap id="BaseResultMap" type="com.cetide.blog.model.entity.Article">
+        <!-- 必须首先定义主键字段 -->
+        <id column="id" property="id"/>
+        <!-- 然后定义普通字段的映射 -->
+        <result column="user_id" property="userId"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="published_at" property="publishedAt"/>
+        <result column="view_count" property="viewCount"/>
+        <result column="comment_count" property="commentCount"/>
+        <result column="category" property="category"/>
+        <result column="tags" property="tags"/>
+        <result column="deleted" property="deleted"/>
+        <result column="slug" property="slug"/>
+        <result column="excerpt" property="excerpt"/>
+        <result column="author_name" property="authorName"/>
+        <result column="is_featured" property="isFeatured"/>
+        <result column="is_draft" property="isDraft"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="like_count" property="likeCount"/>
+        <result column="share_count" property="shareCount"/>
+    </resultMap>
+
+    <!-- Insert an article -->
+    <insert id="insertArticle" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cetide_blog.article
+        (user_id, title, content, created_at, updated_at, published_at, view_count,
+         comment_count, category, tags, deleted, slug, excerpt, author_name, is_featured,
+         is_draft, image_url, like_count, share_count)
+        VALUES (#{userId}, #{title}, #{content}, #{createdAt}, #{updatedAt}, #{publishedAt}, #{viewCount},
+                #{commentCount}, #{category}, #{tags}, #{deleted}, #{slug}, #{excerpt}, #{authorName},
+                #{isFeatured}, #{isDraft}, #{imageUrl}, #{likeCount}, #{shareCount})
+    </insert>
+
+    <!-- Update an article -->
+    <update id="updateArticle" parameterType="com.cetide.blog.model.entity.Article">
+        UPDATE cetide_blog.article
+        SET user_id       = #{userId},
+            title         = #{title},
+            content       = #{content},
+            updated_at    = #{updatedAt},
+            published_at  = #{publishedAt},
+            view_count    = #{viewCount},
+            comment_count = #{commentCount},
+            category      = #{category},
+            tags          = #{tags},
+            deleted       = #{deleted},
+            slug          = #{slug},
+            excerpt       = #{excerpt},
+            author_name   = #{authorName},
+            is_featured   = #{isFeatured},
+            is_draft      = #{isDraft},
+            image_url     = #{imageUrl},
+            like_count    = #{likeCount},
+            share_count   = #{shareCount}
+        WHERE id = #{id}
+    </update>
+
+    <!-- Select an article by ID -->
+    <select id="selectArticleById" resultType="com.cetide.blog.model.entity.Article">
+        SELECT *
+        FROM cetide_blog.article
+        WHERE id = #{id}
+    </select>
+
+    <!-- Select all articles -->
+    <select id="selectAllArticles" resultType="com.cetide.blog.model.entity.Article">
+        SELECT *
+        FROM cetide_blog.article
+    </select>
+    <select id="selectArticlesByUserId" resultType="com.cetide.blog.model.entity.Article">
+        SELECT * FROM cetide_blog.article
+        WHERE deleted = 0 AND user_id = #{id}
+        <if test="keyword != null">
+            AND (
+            title LIKE CONCAT('%', #{keyword}, '%')
+            OR content LIKE CONCAT('%', #{keyword}, '%')
+            OR category LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- Delete an article (soft delete) -->
+    <update id="deleteArticle" parameterType="long">
+        UPDATE cetide_blog.article
+        SET deleted = 1
+        WHERE id = #{id}
+    </update>
+    <update id="updateViewCount">
+        UPDATE cetide_blog.article
+        SET view_count = #{count}
+        WHERE id = #{articleId}
+    </update>
+
+</mapper>

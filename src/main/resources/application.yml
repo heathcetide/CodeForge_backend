@@ -1,0 +1,97 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+      location: D:/study_file
+  datasource:
+    url: jdbc:mysql://cd-cynosdbmysql-grp-lfa6zfg0.sql.tencentcdb.com:23771/cetide_blog?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&noAccessToProcedureBodies=false
+    username: root
+    password: CTct288513832##
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 43.136.179.241
+    port: 6379
+    database: 0
+
+mybatis:
+  configuration:
+    plugins[0]:
+      interceptor: com.cetide.blog.interceptor.LoggingInterceptor
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.security.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 开启SQL日志
+
+jwt:
+  secret: 6Vvq8$fG3jKlP2mNpQs5tRwUyXzA7B+C9D-E)  # 示例密钥，实际应使用生成的随机字符串
+  expiration: 86400000
+  header: Authorization
+  token-start: Bearer
+
+file:
+  upload-dir: /var # 根据实际需求修改路径
+
+qiniu:
+  access-key: your-access-key
+  secret-key: your-secret-key
+  bucket: your-bucket-name
+  domain: https://your-domain.com
+
+logging:
+  level:
+    com.cetide.blog.security: DEBUG
+  file:
+    path: ./logs
+  logstash:
+    enabled: true
+    host: localhost
+    port: 5000
+    queue-size: 512
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+
+security:
+  jwt:
+    secret: your-secret-key
+    expiration: 86400
+  login:
+    lock-duration: 10
+    max-attempts: 5
+  encryption:
+    key: your-encryption-key
+  desensitize:
+    enabled: true
+    cache:
+      global-rules:
+        maximum-size: 1000
+        expire-after-write: 3600
+      scene-rules:
+        maximum-size: 5000
+        expire-after-write: 3600
+  password:
+    min-length: 8
+    require-upper: true
+    require-lower: true
+    require-digit: true
+    require-special: true
+    history-size: 5
+    max-age-days: 90

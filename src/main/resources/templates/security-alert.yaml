@@ -1,0 +1,35 @@
+name: security-alert-template
+channels:
+  - name: high-severity
+    routingKey: security.critical
+    recipients:
+      - "security-team@cetide.com"
+      - "oncall-engineer@cetide.com"
+content: |
+  **安全告警** [${severity}]
+  > 事件类型: ${eventType}
+  > 发生时间: ${timestamp?datetime}
+  ${details} 
+
+- name: critical-alert
+  conditions:
+    - severity == 'CRITICAL'
+  channels:
+    - slack: security-alerts
+    - sms: "+8613800000000"
+  template: |
+    [紧急] 安全事件告警！
+    类型：${eventType}
+    时间：${timestamp?datetime('yyyy-MM-dd HH:mm')}
+    详情：${details}
+    
+- name: normal-alert
+  conditions:
+    - severity == 'MEDIUM' || severity == 'LOW'
+  channels:
+    - email: "security@cetide.com"
+  template: |
+    安全事件通知：
+    类型：${eventType}
+    等级：${severity}
+    时间：${timestamp?datetime} 

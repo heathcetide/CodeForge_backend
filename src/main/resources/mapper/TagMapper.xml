@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetide.blog.mapper.TagMapper">
+    <resultMap id="BaseResultMap" type="com.cetide.blog.model.entity.Tag">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 根据名称模糊查询 -->
+    <select id="searchByName" resultMap="BaseResultMap">
+        SELECT * FROM tags
+        WHERE name LIKE CONCAT('%', #{keyword}, '%')
+        AND deleted = false
+    </select>
+</mapper> 
