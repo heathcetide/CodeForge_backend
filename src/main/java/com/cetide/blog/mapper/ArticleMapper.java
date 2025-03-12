@@ -38,5 +38,5 @@ public interface ArticleMapper extends BaseMapper<Article> {
     @Select("SELECT * FROM cetide_blog.article WHERE deleted = 0 ORDER BY created_at DESC LIMIT #{offset}, #{limit}")
     List<Article> selectArticleByPage(int offset, int i);
 
-    void updateViewCount(@Param("articleId") Long articleId, @Param("count") Integer count);
+    void updateViewCount(@Param("articleId") Long articleId, @Param("count") Long count);
 }

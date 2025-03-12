@@ -2,7 +2,7 @@ package com.cetide.blog.common.security.idempotent;
 
 import com.cetide.blog.common.anno.Idempotent;
 import com.cetide.blog.exception.IdempotentException;
-import com.cetide.blog.common.enums.IdempotentType;
+import com.cetide.blog.model.enums.IdempotentType;
 import com.cetide.blog.util.RedisUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

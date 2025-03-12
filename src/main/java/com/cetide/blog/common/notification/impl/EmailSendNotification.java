@@ -3,7 +3,7 @@ package com.cetide.blog.common.notification.impl;
 
 import com.cetide.blog.common.notification.SendNotifyStrategy;
 import com.cetide.blog.model.entity.notification.Notification;
-import com.cetide.blog.common.enums.notification.NotificationLevel;
+import com.cetide.blog.model.enums.notification.NotificationLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

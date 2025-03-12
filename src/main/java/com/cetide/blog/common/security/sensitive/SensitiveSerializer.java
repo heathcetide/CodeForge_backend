@@ -1,7 +1,7 @@
 package com.cetide.blog.common.security.sensitive;
 
 import com.cetide.blog.common.anno.Sensitive;
-import com.cetide.blog.common.enums.SensitiveType;
+import com.cetide.blog.model.enums.SensitiveType;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;

@@ -1,7 +1,7 @@
 package com.cetide.blog.common.notification.impl;
 
 import com.cetide.blog.model.entity.notification.Notification;
-import com.cetide.blog.common.enums.notification.NotificationLevel;
+import com.cetide.blog.model.enums.notification.NotificationLevel;
 import com.cetide.blog.common.notification.SendNotification;
 import com.cetide.blog.common.notification.SendNotifyStrategy;
 import org.springframework.stereotype.Service;

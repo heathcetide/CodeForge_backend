@@ -50,7 +50,7 @@ public class CosUtils {
         return objectUrl.toString();
     }
 
-    public static String uploadFile(MultipartFile file, String fileName) throws CosClientException, IOException {
+    public static String uploadFileByCos(MultipartFile file, String fileName) throws CosClientException, IOException {
         // 指定文件将要存放的存储桶
         String bucketName = "cetide-1325039295";
 

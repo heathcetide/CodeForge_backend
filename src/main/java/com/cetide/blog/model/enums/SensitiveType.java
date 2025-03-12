@@ -1,4 +1,4 @@
-package com.cetide.blog.common.enums;
+package com.cetide.blog.model.enums;
 
 import com.cetide.blog.common.security.sensitive.SensitiveStrategy;
 

@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.cetide.blog.util.CosUtils.uploadFile;
+import static com.cetide.blog.util.CosUtils.uploadFileByCos;
 
 @Service
 @Transactional
@@ -136,7 +137,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return super.updateById(entity);
     }
 
-    // 上传文章封面图片
     /**
      * 上传文章封面图片
      * @param file 文件
@@ -157,7 +157,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         // 生成唯一的文件名
         String fileName = UUID.randomUUID() + "." + extension;
-        return uploadFile(file, fileName);
+        return uploadFileByCos(file, fileName);
+    }
 //        // 保存文件路径
 //        Path targetLocation = Paths.get(uploadDir + File.separator + fileName);
 //
@@ -171,7 +172,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 //
 //        // 返回文件的相对路径
 //        return "/uploads/" + fileName;
-    }
+
 
     // 检查文件扩展名是否符合要求
     private boolean isValidFileExtension(String extension) {
@@ -206,7 +207,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public void updateViewCount(Long articleId, Integer count) {
-        articleMapper.updateViewCount(articleId, count);
+        Article article = articleMapper.selectById(articleId);
+
+        articleMapper.updateViewCount(articleId, count + article.getViewCount());
     }
 
     @Override

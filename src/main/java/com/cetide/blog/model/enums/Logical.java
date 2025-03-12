@@ -1,4 +1,4 @@
-package com.cetide.blog.common.enums;
+package com.cetide.blog.model.enums;
 
 /**
  * 权限注解的验证模式

@@ -1,7 +1,7 @@
 package com.cetide.blog.model.dto.notification;
 
-import com.cetide.blog.common.enums.notification.NotificationLevel;
-import com.cetide.blog.common.enums.notification.NotificationType;
+import com.cetide.blog.model.enums.notification.NotificationLevel;
+import com.cetide.blog.model.enums.notification.NotificationType;
 
 import java.time.LocalDateTime;
 

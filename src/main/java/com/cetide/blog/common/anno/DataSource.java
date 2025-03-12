@@ -1,7 +1,7 @@
 package com.cetide.blog.common.anno;
 
 
-import com.cetide.blog.common.enums.DataSourceType;
+import com.cetide.blog.model.enums.DataSourceType;
 
 import java.lang.annotation.*;
 

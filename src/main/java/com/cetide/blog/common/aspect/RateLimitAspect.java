@@ -2,7 +2,7 @@ package com.cetide.blog.common.aspect;
 
 import com.cetide.blog.common.anno.RateLimit;
 import com.cetide.blog.common.security.RedisRateLimiter;
-import com.cetide.blog.common.enums.RateLimitType;
+import com.cetide.blog.model.enums.RateLimitType;
 import com.cetide.blog.util.AuthContext;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

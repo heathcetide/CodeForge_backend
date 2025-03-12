@@ -93,7 +93,7 @@ public class ArticleController {
     /**
      * 上传文章封面图片
      * @param file 文件
-     * @return
+     * @return 文件url
      */
     @Operation(summary = "上传文章封面图片")
     @PostMapping("/image")
@@ -157,21 +157,26 @@ public class ArticleController {
         }
     }
 
+    /**
+     * 根据ID获取文章
+     * @param id 文章id
+     * @return 帖子
+     */
     @Operation(summary = "根据ID获取文章")
     @GetMapping("/views/{id}")
     public ApiResponse<Article> getArticleById(@Parameter(description = "文章ID") @PathVariable Long id) {
+        // TODO 此处没有进行防刷控制
         // 获取文章
         Article article = articleService.getById(id);
-
         // 使用 Redis 的 INCR 命令来增加文章的阅读量
         redisTemplate.opsForValue().increment(VIEW_COUNT_PREFIX + id, 1);
-
         // 打印当前文章的阅读量
         Integer count = (Integer) redisTemplate.opsForValue().get(VIEW_COUNT_PREFIX + id);
-        System.out.println("文章访问量：" + count);
-
+        if (count != null){
+            article.setViewCount(article.getViewCount() + count.longValue());
+        }
         // 返回文章信息
-        return article != null ? ApiResponse.success(article) : ApiResponse.error(400, "文章未找到");
+        return ApiResponse.success(article);
     }
 
 

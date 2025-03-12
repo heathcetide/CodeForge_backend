@@ -1,4 +1,4 @@
-package com.cetide.blog.common.enums.notification;
+package com.cetide.blog.model.enums.notification;
 
 /**
  * 通知级别枚举

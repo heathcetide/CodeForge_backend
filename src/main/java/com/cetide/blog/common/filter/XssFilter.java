@@ -1,7 +1,7 @@
 package com.cetide.blog.common.filter;
 
 
-import com.cetide.blog.common.enums.HttpMethod;
+import com.cetide.blog.model.enums.HttpMethod;
 import com.cetide.blog.util.StringUtils;
 
 import javax.servlet.*;

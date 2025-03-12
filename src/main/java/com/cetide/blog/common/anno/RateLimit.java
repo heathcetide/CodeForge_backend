@@ -1,6 +1,6 @@
 package com.cetide.blog.common.anno;
 
-import com.cetide.blog.common.enums.RateLimitType;
+import com.cetide.blog.model.enums.RateLimitType;
 
 import java.lang.annotation.*;
 

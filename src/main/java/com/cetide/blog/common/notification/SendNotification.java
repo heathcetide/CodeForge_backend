@@ -1,7 +1,7 @@
 package com.cetide.blog.common.notification;
 
 
-import com.cetide.blog.common.enums.notification.NotificationLevel;
+import com.cetide.blog.model.enums.notification.NotificationLevel;
 
 import java.time.LocalDateTime;
 import java.util.List;

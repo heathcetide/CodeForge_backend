@@ -32,12 +32,21 @@ import java.util.Map;
 @Tag(name = "用户模块")
 public class UserController {
 
-    @Autowired
+    /**
+     * 用户模块
+     */
+    @Resource
     private UserService userService;
 
+    /**
+     * redis封装工具类
+     */
     @Resource
     private JwtUtils jwtUtils;
-    // 静态日志实例
+
+    /**
+     * 静态日志
+     */
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     /**

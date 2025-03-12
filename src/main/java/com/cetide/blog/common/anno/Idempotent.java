@@ -1,6 +1,6 @@
 package com.cetide.blog.common.anno;
 
-import com.cetide.blog.common.enums.IdempotentType;
+import com.cetide.blog.model.enums.IdempotentType;
 
 import java.lang.annotation.*;
 

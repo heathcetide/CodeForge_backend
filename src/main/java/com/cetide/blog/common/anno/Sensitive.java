@@ -1,6 +1,6 @@
 package com.cetide.blog.common.anno;
 
-import com.cetide.blog.common.enums.SensitiveType;
+import com.cetide.blog.model.enums.SensitiveType;
 
 import java.lang.annotation.*;
 

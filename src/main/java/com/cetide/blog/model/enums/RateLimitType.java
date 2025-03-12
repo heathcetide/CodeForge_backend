@@ -1,4 +1,4 @@
-package com.cetide.blog.common.enums;
+package com.cetide.blog.model.enums;
 
 /**
  * 频率限制类型
