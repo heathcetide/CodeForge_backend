@@ -5,6 +5,7 @@ import com.cetide.blog.model.entity.user.User;
 public class AuthContext {
 
     private static final ThreadLocal<User> currentUser = new ThreadLocal<>();
+
     private static final ThreadLocal<String> currentToken = new ThreadLocal<>();
 
     public static void setCurrentUser(User user) {
