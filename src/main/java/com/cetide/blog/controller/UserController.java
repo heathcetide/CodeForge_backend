@@ -8,6 +8,8 @@ import com.cetide.blog.model.vo.UserVO;
 import com.cetide.blog.service.UserService;
 import com.cetide.blog.util.ApiResponse;
 import com.cetide.blog.util.CaptchaUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -29,7 +31,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "用户模块")
+@Api(tags = "用户模块")
 public class UserController {
 
     @Autowired
@@ -47,7 +49,7 @@ public class UserController {
      * @return 发送状态
      */
     @PostMapping("/email/code")
-    @Operation(summary = "邮箱验证码发送[OK]")
+    @ApiOperation("邮箱验证码发送[OK]")
     public ApiResponse<Boolean> sendEmailCode(@RequestParam String email) {
         Boolean isSuccess = userService.sendEmailCode(email);
         if (isSuccess) {
@@ -64,7 +66,7 @@ public class UserController {
      * @return 返回用户信息
      */
     @PostMapping("/register/email")
-    @Operation(summary = "邮箱注册账号[OK]")
+    @ApiOperation("邮箱注册账号[OK]")
     public ApiResponse<UserVO> registerEmail(@RequestBody RegisterByEmail registerByEmail) {
         return userService.registerByEmail(registerByEmail);
     }
@@ -76,7 +78,7 @@ public class UserController {
      * @return 返回用户信息
      */
     @PostMapping("/login/email")
-    @Operation(summary = "邮箱登录账号[OK]")
+    @ApiOperation("邮箱登录账号[OK]")
     public ApiResponse<String> loginByEmail(
             @RequestBody RegisterByEmail registerByEmail,
             @RequestHeader(value = "device-id", required = false) String deviceId,
@@ -87,7 +89,7 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    @Operation(summary = "根据token获取角色信息")
+    @ApiOperation("根据token获取角色信息")
     public ApiResponse<UserVO> getUserInfoByToken(@RequestHeader("Authorization") String token) {
         try {
             if (token == null || token.isEmpty()){
@@ -108,7 +110,7 @@ public class UserController {
     }
 
     @GetMapping("/info/level")
-    @Operation(summary = "根据token获取角色信息")
+    @ApiOperation("根据token获取角色信息")
     public ApiResponse<UserVO> getUserLevelByToken(@RequestHeader("Authorization") String token) {
         try {
             if (token == null || token.isEmpty()){
@@ -136,7 +138,7 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping("/{username}")
-    @Operation(summary = "用户根据username查看自己的信息")
+    @ApiOperation("用户根据username查看自己的信息")
     public ApiResponse<UserVO> getUserById(@PathVariable String username) {
         try {
             // 日志记录
@@ -165,7 +167,7 @@ public class UserController {
      * @return 用户信息
      */
     @PutMapping("/update")
-    @Operation(summary = "普通用户修改自己的信息")
+    @ApiOperation("普通用户修改自己的信息")
     public ApiResponse<User> updateUser(@RequestBody User user, @RequestHeader("Authorization") String token) {
         logger.info("Request received in updateUser: user={}, token={}", user, token); // 添加日志
         try {
@@ -186,7 +188,7 @@ public class UserController {
      * @return 退出登录状态
      */
     @PostMapping("/logout")
-    @Operation(summary = "用户退出登录")
+    @ApiOperation("用户退出登录")
     public ApiResponse<Void> logout(@RequestHeader("Authorization") String token) {
         userService.logoutUser(token);
         return ApiResponse.success(null);
@@ -199,7 +201,7 @@ public class UserController {
      * @throws IOException 异常
      */
     @GetMapping("/captcha")
-    @Operation(summary = "生成校验二维码")
+    @ApiOperation("生成校验二维码")
     public void getCaptcha(
             HttpSession session,
             HttpServletResponse response) throws IOException {
@@ -226,7 +228,7 @@ public class UserController {
      * @return 验证结果
      */
     @PostMapping("/verify-captcha")
-    @Operation(summary = "验证校验二维码")
+    @ApiOperation("验证校验二维码")
     public ApiResponse<Boolean> verifyCaptcha(
              @RequestBody Map<String, String> request,
              HttpSession session) {
@@ -248,7 +250,7 @@ public class UserController {
      * @return 重置密码
      */
     @PostMapping("/reset-password")
-    @Operation(summary = "重置密码-忘记密码的情况下，通过邮箱或手机号验证身份后设置新密码")
+    @ApiOperation("重置密码-忘记密码的情况下，通过邮箱或手机号验证身份后设置新密码")
     public ApiResponse<Void> resetPassword(
               @RequestParam String emailOrPhone,
               @RequestParam String newPassword) {
@@ -265,7 +267,7 @@ public class UserController {
      * @return 修改密码
      */
     @PostMapping("/change-password")
-    @Operation(summary = "修改密码-用户知道当前的密码，并通过身份验证来更改密码")
+    @ApiOperation("修改密码-用户知道当前的密码，并通过身份验证来更改密码")
     public ApiResponse<Void> changePassword(@RequestHeader("Authorization") String token,
                        @RequestParam String oldPassword,
                        @RequestParam String newPassword) {
@@ -281,7 +283,7 @@ public class UserController {
      * @return 上传头像
      */
     @PostMapping("/upload-avatar")
-    @Operation(summary = "上传头像")
+    @ApiOperation("上传头像")
     public ApiResponse<String> uploadAvatar(
             @RequestParam("file") MultipartFile file,
             @RequestHeader("Authorization") String token) {
@@ -296,7 +298,7 @@ public class UserController {
      * @return 注销用户
      */
     @PostMapping("/delete-account")
-    @Operation(summary = "注销用户")
+    @ApiOperation("注销用户")
     public ApiResponse<Void> deleteAccount(@RequestHeader("Authorization") String token) {
         userService.requestAccountDeletion(token);
         return ApiResponse.success(null);
@@ -310,7 +312,7 @@ public class UserController {
      * @throws MessagingException 异常
      */
     @PostMapping("/send-verification-code")
-    @Operation(summary = "开启二级验证码")
+    @ApiOperation("开启二级验证码")
     public ApiResponse<Void> sendVerificationCode(@RequestParam String emailOrPhone) throws MessagingException {
         userService.sendVerificationCode(emailOrPhone);
         return ApiResponse.success(null);
@@ -324,7 +326,7 @@ public class UserController {
      * @return 返回
      */
     @PostMapping("/verify")
-    @Operation(summary = "开启验证")
+    @ApiOperation("开启验证")
     public ApiResponse<Void> verifyCode(@RequestParam String emailOrPhone, @RequestParam String code) {
         userService.verifyCode(emailOrPhone, code);
         return ApiResponse.success(null);
@@ -337,7 +339,7 @@ public class UserController {
      * @return 返回用户列表
      */
     @GetMapping("/search")
-    @Operation(summary = "搜索公开用户")
+    @ApiOperation("搜索公开用户")
     public ApiResponse<List<User>> searchUsers(@RequestParam String keyword,
                                                @RequestParam int page,
                                                @RequestParam int size) {
@@ -353,7 +355,7 @@ public class UserController {
      * @return 解绑第三方账号
      */
     @PostMapping("/unbind-account")
-    @Operation(summary = "解绑第三方账号（未实现）")
+    @ApiOperation("解绑第三方账号（未实现）")
     public ApiResponse<Void> unbindAccount(@RequestHeader("Authorization") String token, @RequestParam String platform) {
         userService.unbindThirdPartyAccount(token, platform);
         return ApiResponse.success(null);

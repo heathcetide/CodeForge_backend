@@ -16,6 +16,8 @@ import com.cetide.blog.service.ArticleService;
 import com.cetide.blog.service.UserService;
 import com.cetide.blog.service.impl.UserServiceImpl;
 import com.cetide.blog.util.ApiResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,7 +38,7 @@ import java.util.*;
 import static com.cetide.blog.common.constants.ArticleConstants.VIEW_COUNT_PREFIX;
 import static com.cetide.blog.util.AlgorithmUtils.*;
 
-@Tag(name = "文章管理", description = "文章相关接口")
+@Api(tags = "文章管理")
 @RestController
 @RequestMapping("/api/articles")
 public class ArticleController {
@@ -61,7 +63,7 @@ public class ArticleController {
      * @return 分页用户数据
      */
     @GetMapping("/author")
-    @Operation(summary = "获取文章分页列表")
+   @ApiOperation("获取用户文章分页列表")
     public ApiResponse<Page<Article>> getAllArticlesByUserId(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -95,7 +97,7 @@ public class ArticleController {
      * @param file 文件
      * @return
      */
-    @Operation(summary = "上传文章封面图片")
+    @ApiOperation("上传文章封面图片")
     @PostMapping("/image")
     public ApiResponse<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
         String imageUrl = articleService.uploadArticleImage(file);
@@ -107,7 +109,7 @@ public class ArticleController {
      * @param imageName 图片名称，如：849f1bea-636c-4179-a72a-3da0c222e606.jpg
      * @return 图片的完整URL
      */
-    @Operation(summary = "获取文章封面图片URL")
+    @ApiOperation("获取文章封面图片URL")
     @GetMapping("/uploads/{imageName}")
     public String getImage(@PathVariable String imageName) {
         // 假设服务器的URL是 http://localhost:8080/uploads/
@@ -120,7 +122,7 @@ public class ArticleController {
      * @param request 文章创建请求
      * @return 文章
      */
-    @Operation(summary = "创建文章")
+    @ApiOperation("创建文章")
     @PostMapping
     public ApiResponse<String> createArticle(@RequestBody ArticleCreateRequest request) {
         try {
@@ -157,7 +159,7 @@ public class ArticleController {
         }
     }
 
-    @Operation(summary = "根据ID获取文章")
+    @ApiOperation("根据ID获取文章")
     @GetMapping("/views/{id}")
     public ApiResponse<Article> getArticleById(@Parameter(description = "文章ID") @PathVariable Long id) {
         // 获取文章
@@ -175,7 +177,7 @@ public class ArticleController {
     }
 
 
-    @Operation(summary = "更新文章")
+    @ApiOperation("更新文章")
     @PutMapping("/views/{id}")
     public ApiResponse<Article> updateArticle(
             @Parameter(description = "文章ID") @PathVariable Long id,
@@ -185,14 +187,14 @@ public class ArticleController {
         return updated ? ApiResponse.success(article) : ApiResponse.error(400, "更新失败");
     }
 
-    @Operation(summary = "删除文章")
+    @ApiOperation("删除文章")
     @DeleteMapping("/views/{id}")
     public ApiResponse<Boolean> deleteArticle(@Parameter(description = "文章ID") @PathVariable Long id) {
         boolean isDeleted = articleService.removeById(id);
         return isDeleted ? ApiResponse.success(true) : ApiResponse.error(400, "删除失败，文章未找到");
     }
 
-    @Operation(summary = "软删除文章")
+    @ApiOperation("软删除文章")
     @DeleteMapping("/views/{id}/soft")
     public ApiResponse<Boolean> softDeleteArticle(@Parameter(description = "文章ID") @PathVariable Long id) {
         boolean isSoftDeleted = articleService.softDelete(id);
@@ -210,7 +212,7 @@ public class ArticleController {
         return ApiResponse.success(article);
     }
 
-    @Operation(summary = "根据分类获取文章")
+    @ApiOperation("根据分类获取文章")
     @GetMapping("/category/{category}")
     public ApiResponse<List<Article>> getByCategory(@PathVariable String category) {
         List<Article> articles = articleService.lambdaQuery()
@@ -219,7 +221,7 @@ public class ArticleController {
         return ApiResponse.success(articles);
     }
 
-    @Operation(summary = "根据标签获取文章")
+    @ApiOperation("根据标签获取文章")
     @GetMapping("/tag/{tag}")
     public ApiResponse<List<Article>> getByTag(@PathVariable String tag) {
         List<Article> articles = articleService.lambdaQuery()
@@ -235,7 +237,7 @@ public class ArticleController {
      * @param size 大小
      * @return 文章数据
      */
-    @Operation(summary = "搜索文章", description = "根据关键词搜索文章")
+    @ApiOperation("根据关键词搜索文章")
     @GetMapping("/search")
     public ApiResponse<Page<Article>> searchArticles(
             @Parameter(description = "搜索关键词") @RequestParam String keyword,
@@ -249,7 +251,7 @@ public class ArticleController {
         return ApiResponse.success(articlePage);
     }
 
-    @Operation(summary = "高级文章搜索")
+    @ApiOperation("高级文章搜索")
     @GetMapping("/advanced-search")
     public ApiResponse<Page<Article>> advancedSearch(
             @Parameter(description = "关键词") @RequestParam(required = false) String keyword,
@@ -272,7 +274,7 @@ public class ArticleController {
     }
 
 
-    @Operation(summary = "推荐文章[OK]", description = "根据推荐数量推荐相关文章")
+    @ApiOperation("根据推荐数量推荐相关文章")
     @GetMapping("/recommend")
     public ApiResponse<List<Article>> recommendArticles(
             @Parameter(description = "推荐数量") @RequestParam(defaultValue = "10") Integer num) {
@@ -290,7 +292,7 @@ public class ArticleController {
     }
 
 
-    @Operation(summary = "推荐相关文章[基于目标文章匹配]", description = "根据目标文章 ID 和推荐数量推荐相关文章")
+    @ApiOperation("根据目标文章 ID 和推荐数量推荐相关文章")
     @GetMapping("/recommendById")
     public ApiResponse<List<Article>> recommendArticlesById(
             @Parameter(description = "目标文章 ID") @RequestParam Long id,
@@ -383,7 +385,7 @@ public class ArticleController {
         return ApiResponse.success(totalReadCount);
     }
 
-    @Operation(summary = "全文搜索文章", description = "根据文章的标题、内容、标签、作者、slug 和 excerpt 进行模糊搜索，同时排除草稿或已删除的文章")
+    @ApiOperation("根据文章的标题、内容、标签、作者、slug 和 excerpt 进行模糊搜索，同时排除草稿或已删除的文章")
     @GetMapping("/full-search")
     public ApiResponse<Page<Article>> fullSearchArticles(
             @Parameter(description = "搜索关键词") @RequestParam String keyword,

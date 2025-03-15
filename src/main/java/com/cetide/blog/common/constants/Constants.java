@@ -82,6 +82,21 @@ public interface Constants {
     String LOGIN_FAIL = "Error";
 
     /**
+     * 用户未登录
+     */
+    String NOT_LOGGED_IN = "NotLogIn";
+
+    /**
+     * 已经点过赞
+     */
+    String ALREADY_LIKED = "AlreadyLiked";
+
+    /**
+     * 未点赞
+     */
+    String UNLIKED = "UnLiked";
+
+    /**
      * 管理员角色权限标识
      */
     String SUPER_ADMIN = "admin";
