@@ -14,8 +14,10 @@ import com.cetide.blog.service.ArticleActivityRecordService;
 import com.cetide.blog.service.ArticleSearchService;
 import com.cetide.blog.service.ArticleService;
 import com.cetide.blog.service.UserService;
+import com.cetide.blog.service.impl.ArticleLikeServiceImpl;
 import com.cetide.blog.service.impl.UserServiceImpl;
 import com.cetide.blog.util.ApiResponse;
+import com.google.protobuf.ServiceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,12 +60,31 @@ public class ArticleController {
     @Resource
     private UserService userService;
 
+    @Resource
+    ArticleLikeServiceImpl likeService;
+
+    @PutMapping("/{articleId}")
+    @ApiOperation("点赞")
+    public ApiResponse<String> like(@PathVariable("articleId") Long articleId) throws ServiceException {
+
+        likeService.like(articleId);
+        return ApiResponse.success("点赞成功");
+    }
+
+    @PutMapping("/cancel/{articleId}")
+    @ApiOperation("取消点赞")
+    public ApiResponse<String> disLike(@PathVariable("articleId") Long articleId){
+        likeService.disLike(articleId);
+        return ApiResponse.success("取消点赞");
+    }
+
+
     /**
      * 根据用户id查询数据
      * @return 分页用户数据
      */
     @GetMapping("/author")
-   @ApiOperation("获取用户文章分页列表")
+    @ApiOperation("获取用户文章分页列表")
     public ApiResponse<Page<Article>> getAllArticlesByUserId(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,

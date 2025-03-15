@@ -7,13 +7,12 @@ import com.cetide.blog.exception.NoPermissionException;
 import com.cetide.blog.mapper.LikeMapper;
 import com.cetide.blog.model.entity.Like;
 import com.cetide.blog.model.entity.user.User;
-import com.cetide.blog.service.LikeService;
-import com.google.protobuf.ServiceException;
+import com.cetide.blog.service.ArticleLikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LikeServiceImpl implements LikeService {
+public class ArticleLikeServiceImpl implements ArticleLikeService {
     
     @Autowired
     LikeMapper likeMapper;

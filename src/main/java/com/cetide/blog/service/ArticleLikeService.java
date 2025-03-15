@@ -2,7 +2,7 @@ package com.cetide.blog.service;
 
 import com.google.protobuf.ServiceException;
 
-public interface LikeService {
+public interface ArticleLikeService {
 
     /**
      * 用户点赞
