@@ -293,3 +293,41 @@ DELIMITER ;
 
 -- 调用存储过程插入模拟数据
 CALL mock_article_activity_data();
+
+create table cetide_blog.short_link
+(
+    id              bigint                                not null comment 'ID'
+        primary key,
+    gid             varchar(32) default 'default'         null comment '分组标识',
+    description     varchar(1024)                         null comment '描述',
+    domain          varchar(128)                          null comment '域名',
+    short_url       varchar(8)                            null comment '短链接',
+    full_short_url  varchar(128)                          null comment '完整短链接',
+    click_num       int         default 0                 null comment '点击量',
+    origin_url      varchar(1024)                         null comment '原始链接',
+    enabled         tinyint     default 0                 null comment '是否启用',
+    valid_date_type tinyint     default 0                 null comment '有效期类型',
+    valid_date      datetime                              null comment '有效期',
+    deleted         tinyint     default 0                 null comment '是否删除',
+    updated_at      datetime    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
+    created_at      datetime    default CURRENT_TIMESTAMP null comment '创建时间',
+    列_name         int                                   null,
+    constraint short_link_pk
+        unique (full_short_url)
+);
+
+create table cetide_blog.short_link_group
+(
+    id         bigint auto_increment comment 'ID'
+        primary key,
+    gid        varchar(32) default 'default'         null comment '短链接分组标识',
+    name       varchar(64)                           null comment '分组名称',
+    username   varchar(256)                          null comment '创建用户名',
+    created_at datetime    default CURRENT_TIMESTAMP null comment '创建时间',
+    updated_at datetime    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted    tinyint     default 0                 null comment '是否删除',
+    sort_order int         default 0                 null comment '分组排序',
+    constraint short_link_group_pk
+        unique (gid, username)
+);
+

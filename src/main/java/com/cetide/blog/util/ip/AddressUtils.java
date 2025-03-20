@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 获取地址类
  *
- * @author bonss
+ * @author heathcetide
  */
 public class AddressUtils {
     private static final Logger log = LoggerFactory.getLogger(AddressUtils.class);
@@ -42,5 +42,20 @@ public class AddressUtils {
             log.error("获取地理位置异常 {}", ip);
         }
         return UNKNOWN;
+    }
+
+    /**
+     * Main 方法用于测试地址解析功能
+     */
+    public static void main(String[] args) {
+        // 测试内网 IP
+        String internalIp = "192.168.1.100";
+        String internalAddress = getRealAddressByIP(internalIp);
+        System.out.println("Internal IP (" + internalIp + "): " + internalAddress);
+
+        // 测试外网 IP（例如 8.8.8.8）
+        String externalIp = "180.84.30.195";
+        String externalAddress = getRealAddressByIP(externalIp);
+        System.out.println("External IP (" + externalIp + "): " + externalAddress);
     }
 }

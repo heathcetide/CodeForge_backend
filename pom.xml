@@ -13,7 +13,7 @@
 
     <groupId>com.cetide.blog</groupId>
     <artifactId>cetide-blog</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>cetide-blog</name>
     <description>Blog Project</description>
 

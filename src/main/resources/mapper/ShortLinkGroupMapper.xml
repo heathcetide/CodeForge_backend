@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetide.blog.mapper.ShortLinkGroupMapper">
+    <!-- 结果映射 -->
+    <resultMap id="ShortLinkGroupResultMap" type="com.cetide.blog.model.entity.ShortLinkGroup">
+        <id column="id" property="id" />
+        <result column="gid" property="gid" />
+        <result column="name" property="name" />
+        <result column="username" property="username" />
+        <result column="sort_order" property="sortOrder"/>
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 公共字段 -->
+    <sql id="Base_Column_List">
+        id, gid, `name`, username, sort_order, created_at, updated_at, deleted
+    </sql>
+
+    <!-- 示例：根据 gid 查询记录 -->
+    <select id="selectByGid" resultMap="ShortLinkGroupResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM short_link_group
+        WHERE gid = #{gid}
+    </select>
+</mapper>
