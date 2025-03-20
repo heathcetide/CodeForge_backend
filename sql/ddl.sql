@@ -36,6 +36,31 @@ CREATE TABLE `users`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';
 
+CREATE TABLE user_sessions
+(
+    id               BIGINT AUTO_INCREMENT PRIMARY KEY, -- 主键
+    user_id          BIGINT NOT NULL, -- 用户ID，不能为空
+    session_token    VARCHAR(250) NOT NULL, -- 会话令牌，不能为空
+    refresh_token    VARCHAR(250) NOT NULL, -- 刷新令牌，不能为空
+    device_id        VARCHAR(100) NULL, -- 设备ID，可选
+    device_type      VARCHAR(50) NULL,  -- 设备类型（如：手机、电脑等），可选
+    ip_address       VARCHAR(50) NULL,  -- 登录IP地址，可选
+    location         TEXT NULL,         -- 解析后的地址信息（如：国家、省市等），可选
+    user_agent       TEXT NULL,         -- 用户代理，记录浏览器信息等
+    expires_at       TIMESTAMP NOT NULL, -- 会话过期时间，不能为空
+    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 创建时间，默认为当前时间
+    updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间，自动更新
+    os_type          VARCHAR(50) NULL, -- 操作系统类型（如：Windows、Linux、Android、iOS等），可选
+    device_model     VARCHAR(255) NULL, -- 设备型号（如：iPhone 12, Samsung Galaxy 等），可选
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, -- 外键约束，删除用户时删除相关会话
+    UNIQUE (user_id, session_token) -- 确保每个用户只有一个有效的session_token
+);
+
+-- 为 user_id 和 expires_at 创建索引
+CREATE INDEX idx_user_id ON user_sessions(user_id);
+CREATE INDEX idx_expires_at ON user_sessions(expires_at);
+
+
 
 CREATE TABLE `article`
 (

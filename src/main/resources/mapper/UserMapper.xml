@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cetide.blog.mapper.UserMapper">
-    <resultMap id="BaseResultMap" type="com.cetide.blog.model.entity.user.User">
+<mapper namespace="com.cetide.codeforge.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.cetide.codeforge.model.entity.user.User">
         <id column="id" property="id" />
         <result column="username" property="username" />
         <result column="password" property="password" />
+        <result column="encryption_method" property="encryptionMethod"/>
         <result column="email" property="email" />
         <result column="avatar" property="avatar" />
         <result column="role" property="role" />
         <result column="permissions" property="permissions" />
-        <result column="birth_day" property="birthDay" />
+        <result column="birthday" property="birthday" />
         <result column="gender" property="gender" />
         <result column="address" property="address" />
         <result column="phone" property="phone" />
-        <result column="theme" property="theme" />
-        <result column="language" property="language" />
         <result column="points" property="points" />
         <result column="login_count" property="loginCount" />
         <result column="article_count" property="articleCount" />
         <result column="activity_count" property="activityCount" />
-        <result column="tags" property="tags"/>
-        <result column="reading_history" property="readingHistory" />
-        <result column="followers" property="followers" />
+        <result column="password_salt" property="passwordSalt" />
+        <result column="password_updated_at" property="passwordUpdatedAt"/>
+        <result column="login_attempts" property="loginAttempts"/>
         <result column="last_login_time" property="lastLoginTime"/>
-        <result column="password_hash" property="passwordHash" />
+        <result column="lock_time" property="lockTime"/>
+        <result column="account_non_locked" property="accountNonLocked"/>
         <result column="create_at" property="createdAt"/>
         <result column="update_at" property="updatedAt"/>
+        <result column="deleted" property="deleted"/>
         <result column="bio" property="bio"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, username, `password`, email, avatar, `role`, permissions, birth_day, gender,  address, phone, theme, `language`, points, login_count, article_count, activity_count, tags, reading_history, followers, password_hash, password_updated_at, login_attempts, last_login_time, lock_time, deleted, created_at, updated_at, bio
+        id, username, `password`, encryption_method, email, avatar,
+        `role`, permissions, birthday, gender,  address, phone,
+        `language`, points, login_count, article_count, activity_count,
+         password_salt, password_updated_at, login_attempts, last_login_time, lock_time,
+         account_non_locked, deleted, created_at, updated_at, bio
     </sql>
 
     <select id="selectByUsername" resultMap="BaseResultMap">

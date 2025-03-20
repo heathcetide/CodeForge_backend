@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cetide.blog.mapper.ArticleMapper">
-    <resultMap id="BaseResultMap" type="com.cetide.blog.model.entity.Article">
+<mapper namespace="com.cetide.codeforge.mapper.ArticleMapper">
+    <resultMap id="BaseResultMap" type="com.cetide.codeforge.model.entity.Article">
         <!-- 必须首先定义主键字段 -->
         <id column="id" property="id"/>
         <!-- 然后定义普通字段的映射 -->
@@ -38,7 +38,7 @@
     </insert>
 
     <!-- Update an article -->
-    <update id="updateArticle" parameterType="com.cetide.blog.model.entity.Article">
+    <update id="updateArticle" parameterType="com.cetide.codeforge.model.entity.Article">
         UPDATE cetide_blog.article
         SET user_id       = #{userId},
             title         = #{title},
@@ -62,18 +62,18 @@
     </update>
 
     <!-- Select an article by ID -->
-    <select id="selectArticleById" resultType="com.cetide.blog.model.entity.Article">
+    <select id="selectArticleById" resultType="com.cetide.codeforge.model.entity.Article">
         SELECT *
         FROM cetide_blog.article
         WHERE id = #{id}
     </select>
 
     <!-- Select all articles -->
-    <select id="selectAllArticles" resultType="com.cetide.blog.model.entity.Article">
+    <select id="selectAllArticles" resultType="com.cetide.codeforge.model.entity.Article">
         SELECT *
         FROM cetide_blog.article
     </select>
-    <select id="selectArticlesByUserId" resultType="com.cetide.blog.model.entity.Article">
+    <select id="selectArticlesByUserId" resultType="com.cetide.codeforge.model.entity.Article">
         SELECT * FROM cetide_blog.article
         WHERE deleted = 0 AND user_id = #{id}
         <if test="keyword != null">
