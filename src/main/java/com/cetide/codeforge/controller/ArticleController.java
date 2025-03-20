@@ -117,7 +117,7 @@ public class ArticleController {
      */
     @ApiOperation("上传文章封面图片")
     @PostMapping("/image")
-    public ApiResponse<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+    public ApiResponse<String> uploadImage(@RequestPart MultipartFile file) throws IOException {
         String imageUrl = articleService.uploadArticleImage(file);
         return imageUrl != null ? ApiResponse.success(imageUrl) : ApiResponse.error(500, "上传失败");
     }
@@ -130,7 +130,6 @@ public class ArticleController {
     @ApiOperation("获取文章封面图片URL")
     @GetMapping("/uploads/{imageName}")
     public String getImage(@PathVariable String imageName) {
-        // 假设服务器的URL是 http://localhost:8080/uploads/
         return "http://localhost:8080/api/articles/uploads/" + imageName;
     }
 

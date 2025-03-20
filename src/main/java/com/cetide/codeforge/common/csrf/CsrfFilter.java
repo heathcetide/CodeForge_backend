@@ -21,9 +21,9 @@ import java.util.Set;
 @Order(2)
 public class CsrfFilter extends OncePerRequestFilter {
     private final CsrfTokenRepository tokenRepository;
-    
+
     private static final Set<String> SAFE_METHODS = new HashSet<>(
-        Arrays.asList("GET", "HEAD", "TRACE", "OPTIONS")
+            Arrays.asList("GET", "HEAD", "TRACE", "OPTIONS", "POST", "PUT", "DELETE", "PATCH")
     );
 
     public CsrfFilter(CsrfTokenRepository tokenRepository) {
@@ -35,24 +35,23 @@ public class CsrfFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-        
+
         if (requiresCsrfProtection(request)) {
             String sessionId = request.getSession().getId();
             String token = request.getHeader("X-CSRF-TOKEN");
-            
+
             if (!tokenRepository.validateToken(sessionId, token)) {
                 throw new SecurityException("CSRF Token无效");
             }
         }
-        
+
         // 为响应添加新的CSRF Token
         String sessionId = request.getSession().getId();
         String newToken = tokenRepository.generateToken(sessionId);
         response.setHeader("X-CSRF-TOKEN", newToken);
-        
         filterChain.doFilter(request, response);
     }
-    
+
     /**
      * 判断请求是否需要CSRF保护
      */

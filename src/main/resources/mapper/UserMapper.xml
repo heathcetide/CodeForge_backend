@@ -33,7 +33,7 @@
     <sql id="Base_Column_List">
         id, username, `password`, encryption_method, email, avatar,
         `role`, permissions, birthday, gender,  address, phone,
-        `language`, points, login_count, article_count, activity_count,
+         points, login_count, article_count, activity_count,
          password_salt, password_updated_at, login_attempts, last_login_time, lock_time,
          account_non_locked, deleted, created_at, updated_at, bio
     </sql>

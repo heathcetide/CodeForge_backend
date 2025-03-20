@@ -124,57 +124,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/info/level")
-    @ApiOperation("根据token获取角色信息")
-    public ApiResponse<UserVO> getUserLevelByToken(@RequestHeader("Authorization") String token) {
-        try {
-            if (token == null || token.isEmpty()){
-                return ApiResponse.error(300, "未登录或token已过期");
-            }
-            if (token.startsWith("Bearer ")) {
-                token = token.substring(7);
-            }
-            String usernameFromToken = String.valueOf(jwtUtils.getUserIdFromToken(token));
-            User currentUser = userService.getUserByUsername(usernameFromToken);
-            currentUser.setPassword(null);
-            UserVO userInfoLevelVO = new UserVO().toUserVO(currentUser);
-            return ApiResponse.success(userInfoLevelVO);
-        }catch (Exception e){
-            System.out.println("获取用户信息失败"+ e.getMessage());
-            e.printStackTrace();
-            return ApiResponse.error(300, "操作失败");
-        }
-    }
-
-    /**
-     * 普通用户查看自己的信息
-     *
-     * @param username 用户名
-     * @return 用户信息
-     */
-    @GetMapping("/{username}")
-    @ApiOperation("用户根据username查看自己的信息")
-    public ApiResponse<UserVO> getUserById(@PathVariable String username) {
-        try {
-            // 日志记录
-            logger.info("Fetching user information for username: {}", username);
-
-            // 调用服务获取用户信息
-            User user = userService.getUserByUsername(username);
-
-            // 返回成功响应
-            return ApiResponse.success(new UserVO().toUserVO(user));
-        } catch (BusinessException e) {
-            // 捕获自定义异常，返回友好提示
-            logger.warn("Failed to fetch user information: {}", e.getMessage());
-            return ApiResponse.error(404, e.getMessage());
-        } catch (Exception e) {
-            // 捕获未预期异常，记录日志并返回通用错误提示
-            logger.error("Unexpected error occurred while fetching user information", e);
-            return ApiResponse.error(500, "服务器内部错误");
-        }
-    }
-
     /**
      * 普通用户修改自己的信息
      *
@@ -320,34 +269,6 @@ public class UserController {
     }
 
     /**
-     * 开启二级验证码
-     *
-     * @param emailOrPhone 开启二级验证
-     * @return 开启二级验证
-     * @throws MessagingException 异常
-     */
-    @PostMapping("/send-verification-code")
-    @ApiOperation("开启二级验证码")
-    public ApiResponse<Void> sendVerificationCode(@RequestParam String emailOrPhone) throws MessagingException {
-        userService.sendVerificationCode(emailOrPhone);
-        return ApiResponse.success(null);
-    }
-
-    /**
-     * 开启验证
-     *
-     * @param emailOrPhone 开启二级验证
-     * @param code 验证码
-     * @return 返回
-     */
-    @PostMapping("/verify")
-    @ApiOperation("开启验证")
-    public ApiResponse<Void> verifyCode(@RequestParam String emailOrPhone, @RequestParam String code) {
-        userService.verifyCode(emailOrPhone, code);
-        return ApiResponse.success(null);
-    }
-
-    /**
      * 搜索公开用户
      *
      * @param keyword 搜索用户
@@ -359,20 +280,5 @@ public class UserController {
                                                @RequestParam int page,
                                                @RequestParam int size) {
         return ApiResponse.success(userService.searchPublicUsers(keyword, page, size));
-    }
-
-
-    /**
-     * 解绑第三方账号（未实现）
-     *
-     * @param token jwt
-     * @param platform 平台
-     * @return 解绑第三方账号
-     */
-    @PostMapping("/unbind-account")
-    @ApiOperation("解绑第三方账号（未实现）")
-    public ApiResponse<Void> unbindAccount(@RequestHeader("Authorization") String token, @RequestParam String platform) {
-        userService.unbindThirdPartyAccount(token, platform);
-        return ApiResponse.success(null);
     }
 } 

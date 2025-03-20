@@ -3,6 +3,11 @@ package com.cetide.codeforge.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * 项目配置属性
+ *
+ * @author heathcetide
+ */
 @Component
 @ConfigurationProperties(prefix = "code-forge")
 public class CodeForgeConfig {

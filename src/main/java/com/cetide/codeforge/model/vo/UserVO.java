@@ -24,8 +24,6 @@ public class UserVO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
     private Date lastLoginTime;
 
-    private String theme;
-
     public String getUsername() {
         return username;
     }
@@ -80,14 +78,6 @@ public class UserVO {
 
     public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
-    }
-
-    public String getTheme() {
-        return theme;
-    }
-
-    public void setTheme(String theme) {
-        this.theme = theme;
     }
 
     public String getBio() {

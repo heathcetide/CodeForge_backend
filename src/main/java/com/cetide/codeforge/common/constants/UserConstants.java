@@ -35,8 +35,6 @@ public interface UserConstants {
 
     String NEW_USER_AVATAR = "https://cetide-1325039295.cos.ap-chengdu.myqcloud.com/b77339a6-6b52-40fb-9fb4-df04959c859dwordCloud-2412190816.png";
 
-    String NEW_USER_LANGUAGE = "EN";
-
     Integer NEW_USER_GENDER = 0;
 
     String EMPTY_PERMISSIONS = "{}";

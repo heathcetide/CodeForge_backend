@@ -11,9 +11,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.cetide.blog</groupId>
-    <artifactId>cetide-blog</artifactId>
-    <version>1.0.2</version>
+    <groupId>org.cetide.codeforge</groupId>
+    <artifactId>codeforge</artifactId>
+    <version>1.0.0</version>
+
+
     <name>cetide-blog</name>
     <description>Blog Project</description>
 

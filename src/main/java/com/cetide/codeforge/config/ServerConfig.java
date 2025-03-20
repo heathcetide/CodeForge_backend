@@ -8,10 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 服务相关配置
  *
- * @author bonss
+ * @author heathcetide
  */
 @Component
 public class ServerConfig {
+
     /**
      * 获取完整的请求路径，包括：域名，端口，上下文访问路径
      *
