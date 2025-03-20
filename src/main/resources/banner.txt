@@ -1,0 +1,10 @@
+
+${AnsiStyle.BOLD}${AnsiColor.BRIGHT_BLUE} ________  ________  ________  _______   ________ ________  ________  ________  _______
+${AnsiColor.BRIGHT_BLUE}|\   ____\|\   __  \|\   ___ \|\  ___ \ |\  _____\\   __  \|\   __  \|\   ____\|\  ___ \
+${AnsiColor.BLUE}\ \  \___|\ \  \|\  \ \  \_|\ \ \   __/|\ \  \__/\ \  \|\  \ \  \|\  \ \  \___|\ \   __/|
+${AnsiColor.CYAN} \ \  \    \ \  \\\  \ \  \ \\ \ \  \_|/_\ \   __\\ \  \\\  \ \   _  _\ \  \  __\ \  \_|/__
+${AnsiColor.BRIGHT_CYAN}  \ \  \____\ \  \\\  \ \  \_\\ \ \  \_|\ \ \  \_| \ \  \\\  \ \  \\  \\ \  \|\  \ \  \_|\ \
+${AnsiColor.BRIGHT_GREEN}   \ \_______\ \_______\ \_______\ \_______\ \__\   \ \_______\ \__\\ _\\ \_______\ \_______\
+${AnsiColor.GREEN}    \|_______|\|_______|\|_______|\|_______|\|__|    \|_______|\|__|\|__|\|_______|\|_______|
+        ${AnsiStyle.BOLD}${AnsiColor.BRIGHT_BLUE}${code-forge.name} Version:${AnsiColor.BLUE} ${code-forge.version} ${AnsiColor.BRIGHT_GREEN}       Spring Boot Version:${spring-boot.version}${AnsiColor.BRIGHT_CYAN}      Java Version:${java.version}
+        INFO:       构建时间:${AnsiColor.GREEN} ${code-forge.build-time}      版权:${AnsiColor.GREEN} ${code-forge.copyright.owner} ${code-forge.copyright.since-year} ${code-forge.copyright.license}
