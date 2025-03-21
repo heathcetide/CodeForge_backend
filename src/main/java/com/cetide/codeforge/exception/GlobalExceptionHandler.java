@@ -45,4 +45,9 @@ public class GlobalExceptionHandler {
     public ApiResponse<?> handleAuthorizationException(AuthorizationException e) {
         return ApiResponse.error(401,  e.getMessage());
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ApiResponse<?> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return ApiResponse.error(404, e.getMessage());
+    }
 } 

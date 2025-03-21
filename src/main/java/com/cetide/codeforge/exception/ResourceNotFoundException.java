@@ -5,7 +5,7 @@ public class ResourceNotFoundException  extends RuntimeException {
 
     public ResourceNotFoundException(String message) {
         super(message);
-        this.code = 500;
+        this.code = 400;
     }
 
     public ResourceNotFoundException(Integer code, String message) {

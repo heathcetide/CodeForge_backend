@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cetide.codeforge.common.auth.AuthContext;
+import com.cetide.codeforge.exception.BusinessException;
+import com.cetide.codeforge.exception.ResourceNotFoundException;
 import com.cetide.codeforge.model.dto.ArticleCreateRequest;
 import com.cetide.codeforge.model.dto.ArticleSearchParam;
 import com.cetide.codeforge.model.dto.ArticleWithWeight;
@@ -182,6 +184,9 @@ public class ArticleController {
         // TODO 此处没有进行防刷控制
         // 获取文章
         Article article = articleService.getById(id);
+        if (article == null){
+            throw new ResourceNotFoundException("暂无此文章");
+        }
         // 使用 Redis 的 INCR 命令来增加文章的阅读量
         redisTemplate.opsForValue().increment(VIEW_COUNT_PREFIX + id, 1);
         // 打印当前文章的阅读量
