@@ -2,33 +2,33 @@
 CREATE TABLE course
 (
     id              BIGINT PRIMARY KEY AUTO_INCREMENT,
-    title           VARCHAR(100) NOT NULL,
+    title           VARCHAR(100)                                  NOT NULL,
     description     TEXT,
-    level           VARCHAR(10)  NOT NULL COMMENT 'P2/P3/P4',
+    level           VARCHAR(10)                                   NOT NULL COMMENT 'P2/P3/P4',
     category_id     BIGINT,
-    difficulty      ENUM('BEGINNER', 'INTERMEDIATE', 'ADVANCED') NOT NULL DEFAULT 'BEGINNER',
+    difficulty      ENUM ('BEGINNER', 'INTERMEDIATE', 'ADVANCED') NOT NULL DEFAULT 'BEGINNER',
     cover_image     VARCHAR(255),
     estimated_hours INT COMMENT '预计学习时长（小时）',
-    star_rating     DECIMAL(3, 2) DEFAULT 0.00 COMMENT '课程评分（0-5）',
-    enroll_count    INT           DEFAULT 0 COMMENT '报名人数',
-    is_recommended  TINYINT(1) DEFAULT 0 COMMENT '是否推荐课程',
+    star_rating     DECIMAL(3, 2)                                          DEFAULT 0.00 COMMENT '课程评分（0-5）',
+    enroll_count    INT                                                    DEFAULT 0 COMMENT '报名人数',
+    is_recommended  TINYINT(1)                                             DEFAULT 0 COMMENT '是否推荐课程',
     keywords        VARCHAR(255) COMMENT '搜索关键词（逗号分隔）',
-    status          ENUM('DRAFT', 'PUBLISHED', 'ARCHIVED') DEFAULT 'DRAFT' COMMENT '课程状态',
-    is_free         TINYINT(1) DEFAULT 0 COMMENT '是否免费'
+    status          ENUM ('DRAFT', 'PUBLISHED', 'ARCHIVED')                DEFAULT 'DRAFT' COMMENT '课程状态',
+    is_free         TINYINT(1)                                             DEFAULT 0 COMMENT '是否免费'
 );
 
 CREATE TABLE chapter
 (
-    id               BIGINT PRIMARY KEY AUTO_INCREMENT,                    -- 章节ID
-    course_id        BIGINT       NOT NULL,                                -- 关联课程ID
-    parent_id        BIGINT DEFAULT 0 COMMENT '父章节ID，0表示根节点',      -- 父章节ID
-    title            VARCHAR(100) NOT NULL,                                -- 章节标题
-    order_index      INT          NOT NULL COMMENT '排序序号',             -- 章节排序
-    is_leaf          TINYINT(1) NOT NULL COMMENT '是否是叶子节点（最小节）', -- 判断是否为叶子节点（如果是最终小节）
-    content_type     ENUM('VIDEO', 'ARTICLE', 'QUIZ') DEFAULT 'VIDEO' COMMENT '内容类型（视频、文章、测验）',
-    duration_minutes INT COMMENT '预计学习时长（分钟）',                     -- 预计学习时长
-    attachment_url   VARCHAR(255) COMMENT '附件资源地址',                  -- 附件地址（例如课件、文档）
-    markdown_content TEXT COMMENT '章节内容，支持Markdown语法'              -- 支持Markdown格式的内容，文本+视频
+    id               BIGINT PRIMARY KEY AUTO_INCREMENT,                                          -- 章节ID
+    course_id        BIGINT       NOT NULL,                                                      -- 关联课程ID
+    parent_id        BIGINT                            DEFAULT 0 COMMENT '父章节ID，0表示根节点', -- 父章节ID
+    title            VARCHAR(100) NOT NULL,                                                      -- 章节标题
+    order_index      INT          NOT NULL COMMENT '排序序号',                                   -- 章节排序
+    is_leaf          TINYINT(1)   NOT NULL COMMENT '是否是叶子节点（最小节）',                     -- 判断是否为叶子节点（如果是最终小节）
+    content_type     ENUM ('VIDEO', 'ARTICLE', 'QUIZ') DEFAULT 'VIDEO' COMMENT '内容类型（视频、文章、测验）',
+    duration_minutes INT COMMENT '预计学习时长（分钟）',                                           -- 预计学习时长
+    attachment_url   VARCHAR(255) COMMENT '附件资源地址',                                        -- 附件地址（例如课件、文档）
+    markdown_content TEXT COMMENT '章节内容，支持Markdown语法'                                    -- 支持Markdown格式的内容，文本+视频
 );
 
 -- 作业表
@@ -40,7 +40,7 @@ CREATE TABLE assignment
     template_code      TEXT        NOT NULL,
     test_cases         JSON        NOT NULL COMMENT '测试用例（JSON格式）',
     pass_rule          VARCHAR(50) NOT NULL COMMENT '通过规则（如输出匹配）',
-    max_attempts       INT DEFAULT -1 COMMENT '最大尝试次数（-1表示不限）',
+    max_attempts       INT        DEFAULT -1 COMMENT '最大尝试次数（-1表示不限）',
     allow_retry        TINYINT(1) DEFAULT 1 COMMENT '是否允许失败后重试',
     hint               TEXT COMMENT '作业提示',
     start_date         DATETIME COMMENT '作业开放时间',
@@ -113,17 +113,26 @@ VALUES (1,
 CREATE TABLE user_progress
 (
     id                 BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id            BIGINT NOT NULL,
-    chapter_id         BIGINT NOT NULL,
-    status             ENUM('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED') NOT NULL DEFAULT 'NOT_STARTED',
+    user_id            BIGINT                                           NOT NULL,
+    chapter_id         BIGINT                                           NOT NULL,
+    status             ENUM ('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED') NOT NULL DEFAULT 'NOT_STARTED',
     completed_at       DATETIME,
-    total_time_spent   INT DEFAULT 0 COMMENT '总学习时长（分钟）',
+    total_time_spent   INT                                                       DEFAULT 0 COMMENT '总学习时长（分钟）',
     last_accessed      DATETIME COMMENT '最后访问时间',
     quiz_score         INT COMMENT '测验分数',
     first_completed_at DATETIME COMMENT '首次完成时间',
     best_score         INT COMMENT '最佳成绩',
-    review_count       INT DEFAULT 0 COMMENT '复习次数',
+    review_count       INT                                                       DEFAULT 0 COMMENT '复习次数',
     learning_path      JSON COMMENT '个性化学习路径配置'
+);
+
+CREATE TABLE user_course
+(
+    id           BIGINT PRIMARY KEY AUTO_INCREMENT,  -- 中间表的ID
+    user_id      BIGINT NOT NULL,                    -- 用户ID
+    course_id    BIGINT NOT NULL,                    -- 课程ID
+    enroll_date  DATETIME DEFAULT CURRENT_TIMESTAMP, -- 用户报名日期
+    progress     ENUM ('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'NOT_STARTED' -- 学习进度
 );
 
 -- 新增课程分类表
@@ -138,12 +147,11 @@ CREATE TABLE course_category
 CREATE TABLE exam
 (
     id                  BIGINT PRIMARY KEY AUTO_INCREMENT,
-    chapter_id          BIGINT NOT NULL UNIQUE,
-    exam_type           ENUM('CHAPTER_TEST', 'FINAL_EXAM') NOT NULL,
-    time_limit          INT COMMENT '考试时长（分钟）',
-    pass_score          INT    NOT NULL,
+    chapter_id          BIGINT                              NOT NULL UNIQUE,
+    exam_type           ENUM ('CHAPTER_TEST', 'FINAL_EXAM') NOT NULL,
+    pass_score          INT                                 NOT NULL,
     description         TEXT COMMENT '考试说明',
-    max_attempts        INT DEFAULT 1 COMMENT '最大尝试次数',
+    max_attempts        INT        DEFAULT 1 COMMENT '最大尝试次数',
     available_from      DATETIME COMMENT '考试开放时间',
     available_until     DATETIME COMMENT '考试截止时间',
     question_bank       JSON COMMENT '题库配置',
@@ -152,23 +160,52 @@ CREATE TABLE exam
     proctoring_settings JSON COMMENT '监考配置（如屏幕录制）'
 );
 
+# 题目表
+CREATE TABLE sql_question
+(
+    id            BIGINT PRIMARY KEY AUTO_INCREMENT,
+    exam_id       BIGINT       NOT NULL,
+    title         VARCHAR(255) NOT NULL,
+    description   TEXT,
+    schema_sql    TEXT         NOT NULL COMMENT '建表语句',
+    seed_data_sql TEXT         NOT NULL COMMENT '插入数据语句',
+    expected_json JSON         NOT NULL COMMENT '预期结果的 JSON',
+    answer_sql    TEXT COMMENT '标准 SQL 答案',
+    score         INT DEFAULT 5,
+    FOREIGN KEY (exam_id) REFERENCES exam (id) ON DELETE CASCADE
+);
+
+# 用户答题记录表
+CREATE TABLE sql_submission
+(
+    id            BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id       BIGINT NOT NULL,
+    question_id   BIGINT NOT NULL,
+    submitted_sql TEXT   NOT NULL,
+    result_json   JSON COMMENT '执行结果 JSON（可选保存）',
+    is_correct    TINYINT(1) DEFAULT 0,
+    created_at    DATETIME   DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (question_id) REFERENCES sql_question (id) ON DELETE CASCADE
+);
+
+
 -- 新增用户笔记表
 CREATE TABLE user_note
 (
     id             BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id        BIGINT NOT NULL,
-    chapter_id     BIGINT NOT NULL,
-    content        TEXT   NOT NULL,
-    is_public      TINYINT(1) NOT NULL DEFAULT 0,
-    created_at     DATETIME    DEFAULT CURRENT_TIMESTAMP,
+    user_id        BIGINT     NOT NULL,
+    chapter_id     BIGINT     NOT NULL,
+    content        TEXT       NOT NULL,
+    is_public      TINYINT(1) NOT NULL                      DEFAULT 0,
+    created_at     DATETIME                                 DEFAULT CURRENT_TIMESTAMP,
     updated_at     DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    like_count     INT         DEFAULT 0 COMMENT '点赞数',
-    bookmark_count INT         DEFAULT 0 COMMENT '收藏数',
-    comment_count  INT         DEFAULT 0 COMMENT '评论数',
+    like_count     INT                                      DEFAULT 0 COMMENT '点赞数',
+    bookmark_count INT                                      DEFAULT 0 COMMENT '收藏数',
+    comment_count  INT                                      DEFAULT 0 COMMENT '评论数',
     tags           VARCHAR(255) COMMENT '笔记标签（逗号分隔）',
-    language       VARCHAR(10) DEFAULT 'zh' COMMENT '笔记语言',
-    version        INT         DEFAULT 1 COMMENT '版本号（支持历史版本）',
-    audit_status   ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING' COMMENT '审核状态',
+    language       VARCHAR(10)                              DEFAULT 'zh' COMMENT '笔记语言',
+    version        INT                                      DEFAULT 1 COMMENT '版本号（支持历史版本）',
+    audit_status   ENUM ('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING' COMMENT '审核状态',
     audit_remark   TEXT COMMENT '审核备注'
 );
 
@@ -176,15 +213,15 @@ CREATE TABLE user_note
 CREATE TABLE point_record
 (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id       BIGINT NOT NULL,
-    type          ENUM('DAILY_LOGIN', 'COMPLETE_CHAPTER', 'SHARE_NOTE') NOT NULL,
-    points        INT    NOT NULL,
+    user_id       BIGINT                                                 NOT NULL,
+    type          ENUM ('DAILY_LOGIN', 'COMPLETE_CHAPTER', 'SHARE_NOTE') NOT NULL,
+    points        INT                                                    NOT NULL,
     description   VARCHAR(255),
     created_at    DATETIME DEFAULT CURRENT_TIMESTAMP,
     related_id    BIGINT COMMENT '关联ID（如章节ID、考试ID等）',
     expired_at    DATETIME COMMENT '积分过期时间',
     source_detail VARCHAR(255) COMMENT '来源详情',
-    INDEX         idx_user_points (user_id, created_at)
+    INDEX idx_user_points (user_id, created_at)
 );
 
 INSERT INTO course (title, description, level, category_id, difficulty, cover_image, estimated_hours, star_rating,

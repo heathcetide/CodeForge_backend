@@ -9,57 +9,62 @@ public class CourseVO {
     /**
      * 课程标题
      */
-    private final String title;
+    private String title;
 
     /**
      * 课程描述
      */
-    private final String description;
+    private String description;
 
     /**
      * 课程级别（例如 P2、P3、P4）
      */
-    private final String level;
+    private String level;
 
     /**
      * 课程难度（例如初级、中级、高级）
      */
-    private final String difficulty;
+    private String difficulty;
 
     /**
      * 封面图片地址
      */
-    private final String coverImage;
+    private String coverImage;
 
     /**
      * 预计学习时长（小时）
      */
-    private final Integer estimatedHours;
+    private Integer estimatedHours;
 
     /**
      * 星级评分
      */
-    private final Integer starRating;
+    private Integer starRating;
 
     /**
      * 报名人数
      */
-    private final Long enrollCount;
+    private Long enrollCount;
 
     /**
      * 是否推荐（true：推荐，false：不推荐）
      */
-    private final Boolean recommended;
+    private Boolean recommended;
 
     /**
      * 课程状态（例如：'DRAFT', 'PUBLISHED', 'ARCHIVED'）
      */
-    private final String status;
+    private String status;
 
     /**
      * 是否免费（true：免费，false：付费）
      */
-    private final Boolean isFree;
+    private Boolean isFree;
+
+    /**
+     * 是否学习
+     */
+    private Boolean isStudy;
 
     private CourseVO(Builder builder) {
         this.id = builder.id;
@@ -74,6 +79,7 @@ public class CourseVO {
         this.recommended = builder.recommended;
         this.status = builder.status;
         this.isFree = builder.isFree;
+        this.isStudy = builder.isStudy;
     }
 
     public static class Builder {
@@ -89,6 +95,7 @@ public class CourseVO {
         private Boolean recommended;
         private String status;
         private Boolean isFree;
+        private Boolean isStudy;
 
         public Builder setId(String id) {
             this.id = id;
@@ -150,6 +157,11 @@ public class CourseVO {
             return this;
         }
 
+        public Builder setStudy(Boolean study) {
+            this.isStudy = study;
+            return this;
+        }
+
         public CourseVO build() {
             return new CourseVO(this);
         }
@@ -205,5 +217,57 @@ public class CourseVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean getStudy() {
+        return isStudy;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public void setEstimatedHours(Integer estimatedHours) {
+        this.estimatedHours = estimatedHours;
+    }
+
+    public void setStarRating(Integer starRating) {
+        this.starRating = starRating;
+    }
+
+    public void setEnrollCount(Long enrollCount) {
+        this.enrollCount = enrollCount;
+    }
+
+    public void setRecommended(Boolean recommended) {
+        this.recommended = recommended;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setFree(Boolean free) {
+        isFree = free;
+    }
+
+    public void setStudy(Boolean study) {
+        isStudy = study;
     }
 }

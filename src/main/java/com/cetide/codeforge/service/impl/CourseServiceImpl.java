@@ -4,12 +4,14 @@ package com.cetide.codeforge.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cetide.codeforge.common.auth.AuthContext;
 import com.cetide.codeforge.exception.BusinessException;
 import com.cetide.codeforge.mapper.CourseMapper;
 import com.cetide.codeforge.mapper.CourseCategoryMapper;
 import com.cetide.codeforge.model.dto.request.course.CourseAddDTO;
 import com.cetide.codeforge.model.dto.request.course.CourseSearchDTO;
 import com.cetide.codeforge.model.entity.Course;
+import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.model.vo.CourseVO;
 import com.cetide.codeforge.service.CourseService;
 import org.springframework.beans.BeanUtils;
@@ -82,6 +84,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
                         .setRecommended(course.getIsRecommended())
                         .setEnrollCount(course.getEnrollCount())
                         .setStarRating(course.getStarRating())
+                        .setStudy(false)
                         .build())
                 .collect(Collectors.toList());
     }

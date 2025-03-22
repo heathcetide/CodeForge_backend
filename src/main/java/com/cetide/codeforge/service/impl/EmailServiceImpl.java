@@ -40,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
             try {
                 // 发送邮件
                 sendNotificationService.setSendNotifyStrategy(sendNotifyStrategy);
-                sendNotificationService.sendMessage("请接收Cetide Blog验证码" + code, email, "请接收Cetide Blog验证码");
+                sendNotificationService.sendMessage("请接收CodeForge的验证码" + code, email, "请接收CodeForge验证码");
                 return; // 邮件发送成功，退出重试逻辑
             } catch (Exception e) {
                 retryCount++;

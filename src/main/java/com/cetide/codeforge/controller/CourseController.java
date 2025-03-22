@@ -1,20 +1,22 @@
 package com.cetide.codeforge.controller;
 
 import com.cetide.codeforge.common.ApiResponse;
-import com.cetide.codeforge.model.dto.request.course.CourseAddDTO;
-import com.cetide.codeforge.model.dto.request.course.CourseSearchDTO;
-import com.cetide.codeforge.model.dto.request.course.category.CourseCategoryDTO;
-import com.cetide.codeforge.model.entity.Course;
+import com.cetide.codeforge.common.auth.AuthContext;
+import com.cetide.codeforge.model.entity.UserCourse;
+import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.model.vo.CourseCategoryVO;
 import com.cetide.codeforge.model.vo.CourseVO;
 import com.cetide.codeforge.service.CourseCategoryService;
 import com.cetide.codeforge.service.CourseService;
+import com.cetide.codeforge.service.UserCourseService;
+import com.cetide.codeforge.util.bean.BeanUtils;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.List;
+
+import static com.cetide.codeforge.model.enums.CourseProgress.NOT_STARTED;
 
 /**
  * 课程模块
@@ -29,9 +31,12 @@ public class CourseController {
 
     private final CourseCategoryService courseCategoryService;
 
-    public CourseController(CourseService courseService, CourseCategoryService courseCategoryService) {
+    private final UserCourseService userCourseService;
+
+    public CourseController(CourseService courseService, CourseCategoryService courseCategoryService, UserCourseService userCourseService) {
         this.courseService = courseService;
         this.courseCategoryService = courseCategoryService;
+        this.userCourseService = userCourseService;
     }
 
     /**
@@ -47,31 +52,32 @@ public class CourseController {
      */
     @GetMapping("/course/{id}")
     public ApiResponse<List<CourseVO>> listCourse(@PathVariable String id) {
-        return ApiResponse.success(courseService.getCourseByCategoryId(id));
+        List<CourseVO> courseByCategoryId = courseService.getCourseByCategoryId(id);
+        User currentUser = AuthContext.getCurrentUser();
+        if (currentUser != null){
+            courseByCategoryId.forEach(courseVO -> {
+                UserCourse byUserId = userCourseService.getByUserId(courseVO.getId());
+                if (byUserId != null){
+                    courseVO.setStudy(true);
+                }
+            });
+        }
+        return ApiResponse.success(courseByCategoryId);
     }
 
-
-
-    @GetMapping("/{courseId}")
-    public ApiResponse<Course> getCourseDetail(@PathVariable Long courseId) {
-        return ApiResponse.success(courseService.getCourseById(courseId));
+    @PostMapping("/add/course/{courseId}")
+    public ApiResponse<UserCourse> addCourse(@PathVariable String courseId) {
+        User currentUser = AuthContext.getCurrentUser();
+        UserCourse userCourse = new UserCourse();
+        userCourse.setCourseId(Long.valueOf(courseId));
+        userCourse.setUserId(currentUser.getId());
+        userCourse.setEnrollDate(new Date());
+        userCourse.setProgress(NOT_STARTED.getValue());
+        boolean save = userCourseService.save(userCourse);
+        if (save){
+            return ApiResponse.success(userCourse);
+        }else{
+            return ApiResponse.error(500,"报名课程失败");
+        }
     }
-
-    @PostMapping("/search")
-    public ApiResponse<List<Course>> searchCourses(@Valid @RequestBody CourseSearchDTO searchDTO) {
-        return ApiResponse.success(courseService.searchCourses(searchDTO));
-    }
-
-    @PostMapping
-    public ApiResponse<Course> createCourse(@Valid @RequestBody CourseAddDTO createDTO) {
-        return ApiResponse.success(courseService.createCourse(createDTO));
-    }
-
-    @PutMapping("/{courseId}/status")
-    public ApiResponse<Course> updateStatus(
-            @PathVariable Long courseId,
-            @RequestParam @NotBlank String status) {
-        return ApiResponse.success(courseService.updateCourseStatus(courseId, status));
-    }
-
 } 

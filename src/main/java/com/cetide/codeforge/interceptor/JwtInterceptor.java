@@ -29,7 +29,6 @@ public class JwtInterceptor implements HandlerInterceptor {
             if (token == null) {
                 throw new AuthorizationException("未登录或token已过期");
             }
-            System.out.println("第一步token "+ token);
             // 验证token
             if (token.startsWith("Bearer ")) {
                 token = token.substring(7);
@@ -37,7 +36,6 @@ public class JwtInterceptor implements HandlerInterceptor {
             if (!jwtUtils.validateToken(token)) {
                 throw new AuthorizationException("token无效");
             }
-            System.out.println("第二步token "+ token);
             AuthContext.setCurrentUser(userService.getUserById(jwtUtils.getUserIdFromToken(token)));
             return true;
         } catch (AuthorizationException e) {
