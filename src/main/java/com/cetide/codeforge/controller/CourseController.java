@@ -1,7 +1,9 @@
 package com.cetide.codeforge.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cetide.codeforge.common.ApiResponse;
 import com.cetide.codeforge.common.auth.AuthContext;
+import com.cetide.codeforge.exception.BusinessException;
 import com.cetide.codeforge.model.entity.UserCourse;
 import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.model.vo.CourseCategoryVO;
@@ -68,6 +70,13 @@ public class CourseController {
     @PostMapping("/add/course/{courseId}")
     public ApiResponse<UserCourse> addCourse(@PathVariable String courseId) {
         User currentUser = AuthContext.getCurrentUser();
+        LambdaQueryWrapper<UserCourse> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserCourse::getCourseId, courseId);
+        queryWrapper.eq(UserCourse::getUserId, currentUser.getId());
+        UserCourse one = userCourseService.getOne(queryWrapper);
+        if (one != null){
+            throw new BusinessException("用户已报名此课程, 请勿重复报名");
+        }
         UserCourse userCourse = new UserCourse();
         userCourse.setCourseId(Long.valueOf(courseId));
         userCourse.setUserId(currentUser.getId());

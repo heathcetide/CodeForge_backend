@@ -147,6 +147,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return getUserByUsername(user.getUsername());
     }
 
+    @Override
+    public User createUserFromSocialLogin(String providerUsername, String providerEmail, String avatarUrl) {
+        User user = buildSocialNewUser(providerUsername, providerEmail, avatarUrl);
+        try {
+            if (userMapper.insert(user) != 1) {
+                throw new BusinessException("注册失败, 请联系站长");
+            }
+            if (providerEmail != null && !providerEmail.isEmpty()) {
+                emailService.sendWelcomeEmail(user.getUsername(), providerEmail);
+            }
+            // 缓存用户信息
+            redisUtils.set(USER_CACHE_KEY + user.getId(), user, USER_CACHE_TIME);
+            redisUtils.set(USER_CACHE_KEY + user.getUsername(), user, USER_CACHE_TIME);
+            return user;
+        } catch (Exception e) {
+            throw new BusinessException("操作失败, 请联系站长");
+        }
+    }
+
     /**
      * 更新用户信息
      *
@@ -169,19 +188,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 && userMapper.existsByPhone(updateUser.getPhone())) {
             throw new BusinessException("手机号已被注册");
         }
-//        // 更新非空字段
-//        if (updateUser.getNickname() != null) {
-//            user.setNickname(updateUser.getNickname());
-//        }
-//        if (updateUser.getEmail() != null) {
-//            user.setEmail(updateUser.getEmail());
-//        }
-//        if (updateUser.getPhone() != null) {
-//            user.setPhone(updateUser.getPhone());
-//        }
-//        if (updateUser.getAvatarUrl() != null) {
-//            user.setAvatarUrl(updateUser.getAvatarUrl());
-//        }
         userMapper.updateById(user);
         // 更新缓存
         redisUtils.set(USER_CACHE_KEY + id, user, USER_CACHE_TIME);
@@ -672,17 +678,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 //        stats.put("lastLogin", operationLogService.getLastLoginTimeByUserId(userId));
         return stats;
     }
-
-
-    @Override
-    public void unbindThirdPartyAccount(String token, String platform) {
-        Long userId = jwtUtils.getUserIdFromToken(token);
-//        boolean success = thirdPartyAccountService.removeByUserIdAndPlatform(userId, platform);
-//        if (!success) {
-//            throw new IllegalArgumentException("解绑失败，未找到对应的绑定信息");
-//        }
-    }
-
 
     @Override
     public void enableTwoFactorAuth(String token, String secretKey) {

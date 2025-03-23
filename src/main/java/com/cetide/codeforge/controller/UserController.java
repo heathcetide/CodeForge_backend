@@ -1,11 +1,14 @@
 package com.cetide.codeforge.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.cetide.codeforge.common.auth.GithubOAuth;
 import com.cetide.codeforge.common.security.JwtUtils;
-import com.cetide.codeforge.exception.BusinessException;
 import com.cetide.codeforge.model.dto.RegisterByEmail;
 import com.cetide.codeforge.model.dto.request.UserRegisterEmailDTO;
+import com.cetide.codeforge.model.entity.user.SocialLogin;
 import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.model.vo.UserVO;
+import com.cetide.codeforge.service.SocialLoginService;
 import com.cetide.codeforge.service.UserService;
 import com.cetide.codeforge.common.ApiResponse;
 import com.cetide.codeforge.util.common.CaptchaUtils;
@@ -13,16 +16,17 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,14 +51,80 @@ public class UserController {
     private final JwtUtils jwtUtils;
 
     /**
+     * Github登录工具类
+     */
+    private final GithubOAuth githubOAuth;
+
+    /**
+     * 第三方平台服务类
+     */
+    private final SocialLoginService socialLoginService;
+
+    /**
      * 静态日志
      */
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    public UserController(UserService userService, JwtUtils jwtUtils) {
+    public UserController(UserService userService, JwtUtils jwtUtils, GithubOAuth githubOAuth, SocialLoginService socialLoginService) {
         this.userService = userService;
         this.jwtUtils = jwtUtils;
+        this.githubOAuth = githubOAuth;
+        this.socialLoginService = socialLoginService;
     }
+
+
+
+    @GetMapping("/oauth2/code/github")
+    public void callback(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
+        // 使用授权码换取 access_token
+        String accessToken = githubOAuth.getAccessTokenFromGithub(code);
+
+        if (accessToken != null) {
+            // 使用 access_token 获取 GitHub 用户信息
+            Map<String, Object> userInfo = githubOAuth.getUserInfoFromGithub(accessToken);
+            for (Map.Entry<String, Object> entry : userInfo.entrySet()) {
+                System.out.println("-----------");
+                System.out.println(entry.getKey()+" "+entry.getValue());
+            }
+            // 获取 GitHub 用户的唯一标识符
+            Integer providerUserId = (Integer) userInfo.get("id");
+            String providerUsername = (String) userInfo.get("login");
+            String providerEmail = (String) userInfo.get("email");
+            String avatarUrl = (String) userInfo.get("avatar_url");
+
+            LambdaQueryWrapper<SocialLogin> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SocialLogin::getProviderUserId, providerUserId);
+            queryWrapper.eq(SocialLogin::getProviderName, "github");
+            // 查找该 GitHub 用户是否已经在数据库中存在
+            SocialLogin existingSocialLogin = socialLoginService.getOne(queryWrapper);
+            if (existingSocialLogin == null) {
+                // 如果不存在，先通过 UserService 创建新的用户记录
+                User newUser = userService.createUserFromSocialLogin(providerUsername, providerEmail, avatarUrl);
+                // 获取新创建的用户 ID
+                Long userId = newUser.getId();
+                // 然后创建新的社交登录记录
+                SocialLogin newSocialLogin = new SocialLogin();
+                newSocialLogin.setUserId(userId);
+                newSocialLogin.setProviderName("github");
+                newSocialLogin.setProviderUserId(String.valueOf(providerUserId));
+                newSocialLogin.setProviderUsername(providerUsername);
+                newSocialLogin.setAccessToken(accessToken);
+                newSocialLogin.setRefreshToken(null);  // 如果没有 refresh token 可以设置为 null
+                // 保存社交登录记录
+                socialLoginService.save(newSocialLogin);
+            }
+            User user = userService.getById(existingSocialLogin.getUserId());
+            // 生成 JWT token
+            String jwtToken = jwtUtils.generateToken(String.valueOf(user.getId()));
+            // 构建 URL，携带 JWT 和用户信息
+            String redirectUrl = "http://localhost:7070?token=" + jwtToken+ "&code=" + code;
+            // 重定向到前端页面，并将 token 和用户信息作为查询参数传递
+            response.sendRedirect(redirectUrl);
+        } else {
+            response.sendRedirect("http://localhost:7070/login-failed"); // 登录失败时跳转
+        }
+    }
+
 
     /**
      * 发送邮箱验证码

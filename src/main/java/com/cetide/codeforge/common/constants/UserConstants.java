@@ -68,8 +68,27 @@ public interface UserConstants {
         user.setUsername(username);
         user.setPassword(PasswordEncoder.encode(NEW_USER_PASSWORD));
         user.setEmail(email);
-        user.setUsername(NEW_USER_NICKNAME);
         user.setAvatar(NEW_USER_AVATAR);
+        user.setGender(NEW_USER_GENDER);
+        user.setPermissions(EMPTY_PERMISSIONS);
+        user.setRole(USER);
+        user.setCreatedAt(new Date());
+        user.setUpdatedAt(new Date());
+        user.setLastLoginTime(new Date());
+        user.setBirthday(new Date());
+        user.setPasswordSalt(EMPTY_PASSWORD_HASH);
+        user.setDeleted(0);
+        user.setArticleCount(0L);
+        user.setAddress(EMPTY_ADDRESS);
+        return user;
+    }
+
+    static User buildSocialNewUser(String providerUsername, String providerEmail, String avatarUrl) {
+        User user = new User();
+        user.setUsername(providerUsername);
+        user.setPassword(PasswordEncoder.encode(NEW_USER_PASSWORD));
+        user.setEmail(providerEmail);
+        user.setAvatar(avatarUrl);
         user.setGender(NEW_USER_GENDER);
         user.setPermissions(EMPTY_PERMISSIONS);
         user.setRole(USER);

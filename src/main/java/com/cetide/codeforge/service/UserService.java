@@ -50,8 +50,6 @@ public interface UserService extends IService<User> {
 
     Map<String, Object> getUserStatistics(String token);
 
-    void unbindThirdPartyAccount(String token, String platform);
-
     void enableTwoFactorAuth(String token, String secretKey);
 
     void verifyTwoFactorAuth(String token, String verificationCode);
@@ -81,4 +79,9 @@ public interface UserService extends IService<User> {
     List<Map<String, Object>> countUsersByAge();
 
     User updateUserInfo(User user, String token);
+
+    /**
+     * 根据github信息创建新角色
+     */
+    User createUserFromSocialLogin(String providerUsername, String providerEmail, String avatarUrl);
 }

@@ -36,6 +36,22 @@ CREATE TABLE `users`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';
 
+
+create table social_logins
+(
+    id                  bigint auto_increment primary key,
+    user_id             bigint not null,
+    provider_name       varchar(255) not null, -- 第三方平台名称，如 github、google 等
+    provider_user_id    varchar(255) not null, -- 第三方平台的用户唯一标识符
+    provider_username   varchar(255) null,     -- 第三方平台用户名（可选）
+    access_token        varchar(255) null,     -- 授权访问令牌（可选）
+    refresh_token       varchar(255) null,     -- 刷新令牌（可选）
+    created_at          datetime default CURRENT_TIMESTAMP null,
+    updated_at          datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP null,
+    constraint fk_user_id foreign key (user_id) references cetide_blog.users(id) on delete cascade
+);
+
+
 CREATE TABLE user_sessions
 (
     id               BIGINT AUTO_INCREMENT PRIMARY KEY, -- 主键
