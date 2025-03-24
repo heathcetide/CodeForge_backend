@@ -66,6 +66,11 @@ public class CourseVO {
      */
     private Boolean isStudy;
 
+    /**
+     * 首个章节的id
+     */
+    private Long firstChapterId;
+
     private CourseVO(Builder builder) {
         this.id = builder.id;
         this.title = builder.title;
@@ -80,6 +85,7 @@ public class CourseVO {
         this.status = builder.status;
         this.isFree = builder.isFree;
         this.isStudy = builder.isStudy;
+        this.firstChapterId = builder.firstChapterId;
     }
 
     public static class Builder {
@@ -96,6 +102,12 @@ public class CourseVO {
         private String status;
         private Boolean isFree;
         private Boolean isStudy;
+        private Long firstChapterId;
+
+        public Builder setFirstChapterId(Long firstChapterId) {
+            this.firstChapterId = firstChapterId;
+            return this;
+        }
 
         public Builder setId(String id) {
             this.id = id;
@@ -269,5 +281,13 @@ public class CourseVO {
 
     public void setStudy(Boolean study) {
         isStudy = study;
+    }
+
+    public Long getFirstChapterId() {
+        return firstChapterId;
+    }
+
+    public void setFirstChapterId(Long firstChapterId) {
+        this.firstChapterId = firstChapterId;
     }
 }

@@ -8,6 +8,7 @@ import com.cetide.codeforge.model.entity.UserCourse;
 import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.model.vo.CourseCategoryVO;
 import com.cetide.codeforge.model.vo.CourseVO;
+import com.cetide.codeforge.service.ChapterService;
 import com.cetide.codeforge.service.CourseCategoryService;
 import com.cetide.codeforge.service.CourseService;
 import com.cetide.codeforge.service.UserCourseService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static com.cetide.codeforge.model.enums.CourseProgress.NOT_STARTED;
 
@@ -35,10 +37,13 @@ public class CourseController {
 
     private final UserCourseService userCourseService;
 
-    public CourseController(CourseService courseService, CourseCategoryService courseCategoryService, UserCourseService userCourseService) {
+    private final ChapterService chapterService;
+
+    public CourseController(CourseService courseService, CourseCategoryService courseCategoryService, UserCourseService userCourseService, ChapterService chapterService) {
         this.courseService = courseService;
         this.courseCategoryService = courseCategoryService;
         this.userCourseService = userCourseService;
+        this.chapterService = chapterService;
     }
 
     /**
@@ -55,6 +60,10 @@ public class CourseController {
     @GetMapping("/course/{id}")
     public ApiResponse<List<CourseVO>> listCourse(@PathVariable String id) {
         List<CourseVO> courseByCategoryId = courseService.getCourseByCategoryId(id);
+        courseByCategoryId.forEach(courseVO ->{
+            Long firstChapterByCourseId = chapterService.getFirstChapterByCourseId(courseVO.getId());
+            courseVO.setFirstChapterId(Objects.requireNonNullElse(firstChapterByCourseId, 1L));
+        });
         User currentUser = AuthContext.getCurrentUser();
         if (currentUser != null){
             courseByCategoryId.forEach(courseVO -> {

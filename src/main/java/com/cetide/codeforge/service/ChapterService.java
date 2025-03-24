@@ -16,4 +16,6 @@ public interface ChapterService extends IService<Chapter> {
     Chapter getChapterDetail(Long courseId, Long chapterId);
 
     List<ChapterNodeVO> getChapterTree(Long courseId);
+
+    Long getFirstChapterByCourseId(String id);
 }

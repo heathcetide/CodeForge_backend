@@ -1,5 +1,6 @@
 package com.cetide.codeforge.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cetide.codeforge.exception.ResourceNotFoundException;
 import com.cetide.codeforge.mapper.ChapterMapper;
@@ -66,5 +67,19 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter> impl
                 .collect(Collectors.toList());
 
         return tree;
+    }
+
+    @Override
+    public Long getFirstChapterByCourseId(String id) {
+        LambdaQueryWrapper<Chapter> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Chapter::getCourseId, id);
+        queryWrapper.orderByAsc(Chapter::getId);
+        queryWrapper.last("limit 1");
+        Chapter chapter = chapterMapper.selectOne(queryWrapper);
+        if (chapter != null) {
+            return chapter.getId();
+        }else{
+            return null;
+        }
     }
 }

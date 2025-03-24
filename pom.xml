@@ -16,8 +16,8 @@
     <version>1.0.0</version>
 
 
-    <name>cetide-blog</name>
-    <description>Blog Project</description>
+    <name>code-forge</name>
+    <description>Forge Project</description>
 
     <properties>
         <java.version>11</java.version>

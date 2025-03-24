@@ -102,9 +102,9 @@ public class HibiscusSSHConnector {
             sshSession.connect(sshProperties.getConnectionTimeout());
 
 
-//            channel = (ChannelShell) sshSession.openChannel("shell");
-//            channel.setPtyType("xterm");
-//            channel.setPty(true);
+            channel = (ChannelShell) sshSession.openChannel("shell");
+            channel.setPtyType("xterm");
+            channel.setPty(true);
 //
 //            // 设置终端环境变量
 //            channel.setEnv("TERM", "xterm");
