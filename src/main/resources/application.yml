@@ -116,3 +116,11 @@ code-forge:
     owner: CodeForge Team
     since-year: 2024
     license: MIT
+
+cos:
+  secret-id: AKIDMZcWFqEQRI5saAYigS8aqwpWzHMI0Tjk
+  secret-key: rUwAAyZy99ya0DD1d3xjIdnlrnY6SaWG
+  duration-seconds: 1800
+  bucket: code-forge-1349517476
+  region: ap-chengdu
+  app-id: 1349517476
