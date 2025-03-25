@@ -66,7 +66,6 @@ public class MfaService {
             mfaCodeExpiration.remove(userIdentifier);
             return true;
         }
-
         return false;
     }
 }

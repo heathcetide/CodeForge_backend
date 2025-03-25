@@ -24,7 +24,7 @@ public class MailConfig {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.ssl.enable", "true"); // 启用 SSL
         props.put("mail.debug", "true");           // 开启调试日志
-
+        props.put("mail.smtp.ssl.trust", "smtp.zoho.com");
         return mailSender;
     }
 }

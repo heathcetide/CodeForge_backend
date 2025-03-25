@@ -307,8 +307,12 @@ public class ArticleController {
         Page<Article> articlePage = articleService.page(new Page<>(1, num), query);
         List<Article> articles = articlePage.getRecords();
         for (Article article : articles){
-            User userById = userService.getUserById(article.getUserId());
-            article.setUserAvatar(userById.getAvatar());
+            LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(User::getId, article.getUserId());
+            User userById = userService.getOne(queryWrapper);
+            if (userById != null){
+                article.setUserAvatar(userById.getAvatar());
+            }
         }
         return ApiResponse.success(articles);
     }

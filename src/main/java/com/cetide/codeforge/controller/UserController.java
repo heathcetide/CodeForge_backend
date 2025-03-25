@@ -1,6 +1,7 @@
 package com.cetide.codeforge.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.cetide.codeforge.common.auth.AuthContext;
 import com.cetide.codeforge.common.auth.GithubOAuth;
 import com.cetide.codeforge.common.security.JwtUtils;
 import com.cetide.codeforge.model.dto.RegisterByEmail;
@@ -73,7 +74,9 @@ public class UserController {
     }
 
 
-
+    /**
+     * OAuth 对接Github 登录
+     */
     @GetMapping("/oauth2/code/github")
     public void callback(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
         // 使用授权码换取 access_token
@@ -173,18 +176,14 @@ public class UserController {
         return ApiResponse.success(userService.loginByEmail(registerByEmail, deviceId, deviceType, ipAddress, userAgent));
     }
 
+    /**
+     * 根据token获取信息
+     */
     @GetMapping("/info")
     @ApiOperation("根据token获取角色信息")
-    public ApiResponse<UserVO> getUserInfoByToken(@RequestHeader("Authorization") String token) {
+    public ApiResponse<UserVO> getUserInfoByToken() {
         try {
-            if (token == null || token.isEmpty()){
-                return ApiResponse.error(300, "未登录或token已过期");
-            }
-            if (token.startsWith("Bearer ")) {
-                token = token.substring(7);
-            }
-            String id = String.valueOf(jwtUtils.getUserIdFromToken(token));
-            User currentUser = userService.getUserById(Long.valueOf(id));
+            User currentUser = AuthContext.getCurrentUser();
             currentUser.setPassword(null);
             return ApiResponse.success(new UserVO().toUserVO(currentUser));
         }catch (Exception e){
@@ -217,63 +216,13 @@ public class UserController {
 
     /**
      * 用户退出登录
-     *
-     * @param token jwt信息
-     * @return 退出登录状态
      */
     @PostMapping("/logout")
     @ApiOperation("用户退出登录")
-    public ApiResponse<Void> logout(@RequestHeader("Authorization") String token) {
-        userService.logoutUser(token);
-        return ApiResponse.success(null);
-    }
-
-    /**
-     * 生成校验二维码
-     * @param session session
-     * @param response response
-     * @throws IOException 异常
-     */
-    @GetMapping("/captcha")
-    @ApiOperation("生成校验二维码")
-    public void getCaptcha(
-            HttpSession session,
-            HttpServletResponse response) throws IOException {
-        String sessionId = session.getId();
-        System.out.println("Session ID (getCaptcha): " + sessionId);
-        String captchaText = CaptchaUtils.generateCaptchaText(6);
-        System.out.println("Generated Captcha Text: " + captchaText);
-        session.setAttribute("captcha", captchaText);
-
-        // 生成验证码图片
-        BufferedImage image = CaptchaUtils.generateCaptchaImage(captchaText);
-        response.setContentType("image/png");
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // 禁用缓存
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
-        // 将图片写入响应流
-        ImageIO.write(image, "png", response.getOutputStream());
-    }
-
-    /**
-     * 验证校验二维码
-     * @param request request
-     * @param session session
-     * @return 验证结果
-     */
-    @PostMapping("/verify-captcha")
-    @ApiOperation("验证校验二维码")
-    public ApiResponse<Boolean> verifyCaptcha(
-             @RequestBody Map<String, String> request,
-             HttpSession session) {
-        String sessionId = session.getId();
-        System.out.println("Session ID (verifyCaptcha): " + sessionId);
-        String userCaptcha = request.get("captcha");
-        String sessionCaptcha = (String) session.getAttribute("captcha");
-        System.out.println("User Captcha: " + userCaptcha + " Session Captcha: " + sessionCaptcha);
-        boolean success = userCaptcha != null && userCaptcha.equalsIgnoreCase(sessionCaptcha);
-        System.out.println("Verification Result: " + success);
-        return ApiResponse.success(success);
+    public ApiResponse<String> logout() {
+        String currentToken = AuthContext.getCurrentToken();
+        userService.logoutUser(currentToken);
+        return ApiResponse.success("退出登录成功");
     }
 
     /**

@@ -246,3 +246,71 @@ VALUES ('MySQL 入门教程', '本课程适合零基础学习者，讲解MySQL�
         'https://via.placeholder.com/200', 60, 5.0, 400, 1, 'MySQL,源码,内部原理', 'PUBLISHED', 0),
        ('MySQL 高级实践：从入门到精通', '综合性课程，从基础知识到高级应用，全方位覆盖MySQL的各个方面。', 'P4', 1,
         'ADVANCED', 'https://via.placeholder.com/200', 70, 5.0, 300, 1, 'MySQL,高级实践,精通', 'PUBLISHED', 0);
+
+
+CREATE TABLE user_matches (
+                              match_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '比赛ID',
+                              user_id1 INT NOT NULL COMMENT '用户1 ID',
+                              user_id2 INT NOT NULL COMMENT '用户2 ID',
+                              match_start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '比赛开始时间',
+                              match_end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '比赛结束时间',
+                              winner_user_id INT COMMENT '胜者用户ID',
+                              create_by INT COMMENT '创建人',
+                              create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              update_by INT COMMENT '修改人',
+                              update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+) COMMENT '用户匹配PK表';
+
+CREATE TABLE user_answers (
+                              answer_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '答案记录ID',
+                              user_id INT NOT NULL COMMENT '用户ID',
+                              question_id INT NOT NULL COMMENT '题目ID',
+                              user_answer TEXT NOT NULL COMMENT '用户答案',
+                              is_correct BOOLEAN COMMENT '答案是否正确',
+                              answer_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '作答时间',
+                              create_by INT COMMENT '创建人',
+                              create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              update_by INT COMMENT '修改人',
+                              update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+) COMMENT '用户作答记录表';
+
+CREATE TABLE question_popularity (
+                                     popularity_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '热度ID',
+                                     question_id INT NOT NULL COMMENT '题目ID',
+                                     popularity_score INT DEFAULT 0 COMMENT '热度分数',
+                                     last_tested TIMESTAMP COMMENT '最后被测试的时间',
+                                     create_by INT COMMENT '创建人',
+                                     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                     update_by INT COMMENT '修改人',
+                                     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+) COMMENT '题目热度表';
+
+CREATE TABLE interview_questions (
+                                     question_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '题目ID',
+                                     category_id INT NOT NULL COMMENT '类别ID',
+                                     topic_id INT NOT NULL COMMENT '专题ID',
+                                     question_text TEXT NOT NULL COMMENT '题目内容',
+                                     answer_text TEXT NOT NULL COMMENT '答案内容',
+                                     create_by INT COMMENT '创建人',
+                                     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                     update_by INT COMMENT '修改人',
+                                     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+) COMMENT '面试题库表';
+
+CREATE TABLE interview_question_topics (
+                                           topic_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '专题ID',
+                                           topic_name VARCHAR(255) NOT NULL COMMENT '专题名称',
+                                           create_by INT COMMENT '创建人',
+                                           create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                           update_by INT COMMENT '修改人',
+                                           update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+) COMMENT '面试题专题表';
+
+CREATE TABLE interview_question_categories (
+                                               category_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '类别ID',
+                                               category_name VARCHAR(255) NOT NULL COMMENT '类别名称',
+                                               create_by INT COMMENT '创建人',
+                                               create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                               update_by INT COMMENT '修改人',
+                                               update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+) COMMENT '面试题分类表';

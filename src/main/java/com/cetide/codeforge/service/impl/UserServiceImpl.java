@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cetide.codeforge.common.encrypt.KmsService;
+import com.cetide.codeforge.common.encrypt.PasswordEncryptionService;
 import com.cetide.codeforge.common.security.JwtUtils;
 import com.cetide.codeforge.exception.BusinessException;
 import com.cetide.codeforge.mapper.UserMapper;
 import com.cetide.codeforge.model.dto.RegisterByEmail;
+import com.cetide.codeforge.model.dto.request.AdminLoginDTO;
 import com.cetide.codeforge.model.dto.request.UserRegisterEmailDTO;
 import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.model.vo.UserVO;
@@ -40,6 +43,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static com.cetide.codeforge.common.constants.RoleConstants.USER;
+import static com.cetide.codeforge.common.constants.SystemConstants.BCRYPT_METHOD;
 import static com.cetide.codeforge.common.constants.UserConstants.*;
 
 
@@ -63,6 +67,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private MessageSource messageSource;
+
+    @Resource
+    private PasswordEncryptionService passwordEncryptionService;
 
     // 静态日志实例
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -165,6 +172,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException("操作失败, 请联系站长");
         }
     }
+
+    @Override
+    public String adminLogin(AdminLoginDTO adminLoginDTO) {
+        String email = adminLoginDTO.getEmail();
+        // 添加邮箱格式校验
+        if (!isValidEmail(email)) {
+            throw new BusinessException("邮箱格式不正确");
+        }
+        User user = userMapper.selectByEmail(adminLoginDTO.getEmail());
+        if (user == null) {
+            throw new BusinessException("邮箱未注册");
+        }
+        String encryptionMethod = user.getEncryptionMethod();
+        boolean isCorrect;
+        if (encryptionMethod.equals(BCRYPT_METHOD)){
+            isCorrect = passwordEncryptionService.matchesBCrypt(adminLoginDTO.getPassword() + user.getPasswordSalt(),user.getPassword());
+        }else{
+            isCorrect = passwordEncryptionService.matchesPBKDF2(adminLoginDTO.getPassword() + user.getPasswordSalt(),user.getPassword());
+        }
+        if (!isCorrect) {
+            throw new BusinessException("密码错误");
+        }
+        String token = jwtUtils.generateToken(String.valueOf(user.getId()));
+        // 缓存token和用户信息
+        redisUtils.set(TOKEN_CACHE_KEY + user.getId(), token, TOKEN_CACHE_TIME);
+        redisUtils.set(USER_CACHE_KEY + user.getUsername(), user, USER_CACHE_TIME);
+        redisUtils.set(USER_CACHE_KEY + user.getId(), user, USER_CACHE_TIME);
+        return token;
+    }
+
 
     /**
      * 更新用户信息

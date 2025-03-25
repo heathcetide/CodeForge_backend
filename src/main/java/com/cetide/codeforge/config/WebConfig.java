@@ -1,6 +1,7 @@
 package com.cetide.codeforge.config;
 
 
+import com.cetide.codeforge.interceptor.AdminInterceptor;
 import com.cetide.codeforge.interceptor.AnonymousInterceptor;
 import com.cetide.codeforge.interceptor.JwtInterceptor;
 import org.springframework.context.annotation.Bean;
@@ -29,9 +30,12 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
     private final AnonymousInterceptor anonymousInterceptor;
 
-    public WebConfig(JwtInterceptor jwtInterceptor, AnonymousInterceptor anonymousInterceptor) {
+    private final AdminInterceptor adminInterceptor;
+
+    public WebConfig(JwtInterceptor jwtInterceptor, AnonymousInterceptor anonymousInterceptor, AdminInterceptor adminInterceptor) {
         this.jwtInterceptor = jwtInterceptor;
         this.anonymousInterceptor = anonymousInterceptor;
+        this.adminInterceptor = adminInterceptor;
     }
 
     @Override
@@ -43,9 +47,13 @@ public class WebConfig extends WebMvcConfigurationSupport {
                 .addPathPatterns("/api/article-activity/**")
                 .addPathPatterns("/api/user-course/**")
                 .addPathPatterns("/api/courses/add/course/**")
-                .addPathPatterns("/api/chapters/**");
+                .addPathPatterns("/api/chapters/**")
+                .addPathPatterns("/api/users/info","/api/users/update","/api/users/update");
         registry.addInterceptor(anonymousInterceptor)
                 .addPathPatterns("/api/courses/**");
+
+        registry.addInterceptor(adminInterceptor)
+                .addPathPatterns("/api/admin/users/info");
    }
 
     @Bean

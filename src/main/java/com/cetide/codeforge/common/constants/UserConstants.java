@@ -1,5 +1,6 @@
 package com.cetide.codeforge.common.constants;
 
+import com.cetide.codeforge.common.encrypt.PasswordEncryptionService;
 import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.util.PasswordEncoder;
 import com.cetide.codeforge.util.UUIDUtils;
@@ -7,6 +8,7 @@ import com.cetide.codeforge.util.UUIDUtils;
 import java.util.Date;
 
 import static com.cetide.codeforge.common.constants.RoleConstants.USER;
+import static com.cetide.codeforge.common.constants.SystemConstants.BCRYPT_METHOD;
 
 /**
  * 用户常量信息
@@ -64,9 +66,11 @@ public interface UserConstants {
     long SEND_INTERVAL = 1; // 发送间隔（分钟）
 
     static User buildNewUser(String username, String email) {
+        PasswordEncryptionService service = new PasswordEncryptionService();
         User user = new User();
         user.setUsername(username);
-        user.setPassword(PasswordEncoder.encode(NEW_USER_PASSWORD));
+        user.setPassword(service.encodeWithBCrypt(NEW_USER_PASSWORD + EMPTY_PASSWORD_HASH));
+        user.setEncryptionMethod(BCRYPT_METHOD);
         user.setEmail(email);
         user.setAvatar(NEW_USER_AVATAR);
         user.setGender(NEW_USER_GENDER);
@@ -84,9 +88,11 @@ public interface UserConstants {
     }
 
     static User buildSocialNewUser(String providerUsername, String providerEmail, String avatarUrl) {
+        PasswordEncryptionService service = new PasswordEncryptionService();
         User user = new User();
         user.setUsername(providerUsername);
-        user.setPassword(PasswordEncoder.encode(NEW_USER_PASSWORD));
+        user.setPassword(service.encodeWithBCrypt(NEW_USER_PASSWORD));
+        user.setEncryptionMethod(BCRYPT_METHOD);
         user.setEmail(providerEmail);
         user.setAvatar(avatarUrl);
         user.setGender(NEW_USER_GENDER);

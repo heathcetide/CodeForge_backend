@@ -3,6 +3,7 @@ package com.cetide.codeforge.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cetide.codeforge.model.dto.RegisterByEmail;
+import com.cetide.codeforge.model.dto.request.AdminLoginDTO;
 import com.cetide.codeforge.model.dto.request.UserRegisterEmailDTO;
 import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.model.vo.UserVO;
@@ -84,4 +85,9 @@ public interface UserService extends IService<User> {
      * 根据github信息创建新角色
      */
     User createUserFromSocialLogin(String providerUsername, String providerEmail, String avatarUrl);
+
+    /**
+     * 管理员登录
+     */
+    String adminLogin(AdminLoginDTO adminLoginDTO);
 }

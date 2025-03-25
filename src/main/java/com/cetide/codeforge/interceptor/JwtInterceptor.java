@@ -37,6 +37,7 @@ public class JwtInterceptor implements HandlerInterceptor {
                 throw new AuthorizationException("token无效");
             }
             AuthContext.setCurrentUser(userService.getUserById(jwtUtils.getUserIdFromToken(token)));
+            AuthContext.setCurrentToken(token);
             return true;
         } catch (AuthorizationException e) {
             // 返回401未授权错误
@@ -52,5 +53,4 @@ public class JwtInterceptor implements HandlerInterceptor {
             return false;
         }
     }
-
 } 
