@@ -1,27 +1,70 @@
 package com.cetide.codeforge.model.entity.exams;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * sql问题实体类
+ *
+ * @author heathcetide
+ */
 @TableName("sql_question")
 public class SqlQuestion {
 
+    /**
+     * id
+     */
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    /**
+     * exam_id
+     */
+    @TableField("exam_id")
     private Long examId;
 
+    /**
+     * title
+     */
+    @TableField("title")
     private String title;
 
+    /**
+     * description
+     */
+    @TableField("description")
     private String description;
 
-    private String initSql; // 初始化数据库语句
+    /**
+     * schema_sql
+     */
+    @TableField("schema_sql")
+    private String schemaSql;
 
-    private String expectedSql; // 标准答案SQL
+    /**
+     * seed_data_sql
+     */
+    @TableField("seed_data_sql")
+    private String seedDataSql;
 
-    private String expectedResultJson; // 正确结果的JSON表示
+    /**
+     * expected_json
+     */
+    @TableField("expected_json")
+    private String expectedJson;
 
+    /**
+     * answer_sql
+     */
+    @TableField("answer_sql")
+    private String answerSql;
+
+    /**
+     * score
+     */
+    @TableField("score")
     private Integer score;
 
     public Long getId() {
@@ -56,28 +99,36 @@ public class SqlQuestion {
         this.description = description;
     }
 
-    public String getInitSql() {
-        return initSql;
+    public String getSchemaSql() {
+        return schemaSql;
     }
 
-    public void setInitSql(String initSql) {
-        this.initSql = initSql;
+    public void setSchemaSql(String schemaSql) {
+        this.schemaSql = schemaSql;
     }
 
-    public String getExpectedSql() {
-        return expectedSql;
+    public String getSeedDataSql() {
+        return seedDataSql;
     }
 
-    public void setExpectedSql(String expectedSql) {
-        this.expectedSql = expectedSql;
+    public void setSeedDataSql(String seedDataSql) {
+        this.seedDataSql = seedDataSql;
     }
 
-    public String getExpectedResultJson() {
-        return expectedResultJson;
+    public String getExpectedJson() {
+        return expectedJson;
     }
 
-    public void setExpectedResultJson(String expectedResultJson) {
-        this.expectedResultJson = expectedResultJson;
+    public void setExpectedJson(String expectedJson) {
+        this.expectedJson = expectedJson;
+    }
+
+    public String getAnswerSql() {
+        return answerSql;
+    }
+
+    public void setAnswerSql(String answerSql) {
+        this.answerSql = answerSql;
     }
 
     public Integer getScore() {

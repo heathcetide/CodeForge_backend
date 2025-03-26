@@ -1,34 +1,87 @@
 package com.cetide.codeforge.model.entity.exams;
 
-import com.baomidou.mybatisplus.annotation.*;
-import java.time.LocalDateTime;
-@TableName("exam")
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
+
+/**
+ * 考试表
+ */
+@TableName("exam") // 关联数据库表名
 public class Exam {
 
+    /**
+     * id
+     */
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 关联章节id
+     */
+    @TableField("chapter_id")
     private Long chapterId;
 
-    private String examType; // 'CHAPTER_TEST', 'FINAL_EXAM'
+    /**
+     * 测试种类
+     */
+    @TableField("exam_type")
+    private String examType;
 
+    /**
+     * 通过分数
+     */
+    @TableField("pass_score")
     private Integer passScore;
 
+    /**
+     * 测试描述
+     */
+    @TableField("description")
     private String description;
 
+    /**
+     * 最多尝试次数
+     */
+    @TableField("max_attempts")
     private Integer maxAttempts;
 
-    private LocalDateTime availableFrom;
+    /**
+     * 测试开放时间
+     */
+    @TableField("available_from")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date availableFrom;
 
-    private LocalDateTime availableUntil;
+    /**
+     * 测试截至时间
+     */
+    @TableField("available_until")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date availableUntil;
 
-    private String questionBank; // JSON string
+    /**
+     * 是否乱序题目
+     */
+    @TableField("shuffle_questions")
+    private Integer shuffleQuestions;
 
-    private Boolean shuffleQuestions;
+    /**
+     * 是否显示正确答案
+     */
+    @TableField("show_answers")
+    private Integer showAnswers;
 
-    private Boolean showAnswers;
+    /**
+     * 监考配置（一般无）
+     */
+    @TableField("proctoring_settings")
+    private String proctoringSettings;
 
-    private String proctoringSettings; // JSON string
 
     public Long getId() {
         return id;
@@ -78,43 +131,35 @@ public class Exam {
         this.maxAttempts = maxAttempts;
     }
 
-    public LocalDateTime getAvailableFrom() {
+    public Date getAvailableFrom() {
         return availableFrom;
     }
 
-    public void setAvailableFrom(LocalDateTime availableFrom) {
+    public void setAvailableFrom(Date availableFrom) {
         this.availableFrom = availableFrom;
     }
 
-    public LocalDateTime getAvailableUntil() {
+    public Date getAvailableUntil() {
         return availableUntil;
     }
 
-    public void setAvailableUntil(LocalDateTime availableUntil) {
+    public void setAvailableUntil(Date availableUntil) {
         this.availableUntil = availableUntil;
     }
 
-    public String getQuestionBank() {
-        return questionBank;
-    }
-
-    public void setQuestionBank(String questionBank) {
-        this.questionBank = questionBank;
-    }
-
-    public Boolean getShuffleQuestions() {
+    public Integer getShuffleQuestions() {
         return shuffleQuestions;
     }
 
-    public void setShuffleQuestions(Boolean shuffleQuestions) {
+    public void setShuffleQuestions(Integer shuffleQuestions) {
         this.shuffleQuestions = shuffleQuestions;
     }
 
-    public Boolean getShowAnswers() {
+    public Integer getShowAnswers() {
         return showAnswers;
     }
 
-    public void setShowAnswers(Boolean showAnswers) {
+    public void setShowAnswers(Integer showAnswers) {
         this.showAnswers = showAnswers;
     }
 

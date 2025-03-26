@@ -42,10 +42,11 @@ public class MultiTenantSqlSandboxExecutor {
 
             // ② 使用事务隔离测试环境（执行用户 SQL 和标准 SQL 各一次，中间通过 rollback 重置环境）
             conn.setAutoCommit(false);
-            List<Map<String, Object>> userResult;
-            List<Map<String, Object>> expectedResult;
+            List<Map<String, Object>> userResult = null;
+            List<Map<String, Object>> expectedResult = null;
             long userExecutionTime;
             long expectedExecutionTime;
+
             try (Statement stmt = conn.createStatement()) {
                 // 执行测试环境初始化 SQL（例如创建考试相关的表、插入数据）
                 for (String sql : initSql.split(";")) {
@@ -53,11 +54,19 @@ public class MultiTenantSqlSandboxExecutor {
                         stmt.execute(sql);
                     }
                 }
+
                 // 执行用户提交的 SQL并计时
                 long startUser = System.currentTimeMillis();
-                ResultSet userRs = stmt.executeQuery(userSql);
+                boolean isQueryUser = userSql.trim().toUpperCase().startsWith("SELECT");
+                if (isQueryUser) {
+                    ResultSet userRs = stmt.executeQuery(userSql);  // 如果是查询语句，使用 executeQuery
+                    userResult = extractResult(userRs);
+                } else {
+                    stmt.execute(userSql);  // 如果是 DDL 语句，如 CREATE TABLE，使用 execute
+                    userResult = null;  // DDL 语句没有查询结果
+                }
                 userExecutionTime = System.currentTimeMillis() - startUser;
-                userResult = extractResult(userRs);
+
                 // 回滚，清除测试过程中对环境的修改
                 conn.rollback();
 
@@ -70,15 +79,30 @@ public class MultiTenantSqlSandboxExecutor {
                         stmt.execute(sql);
                     }
                 }
+
                 // 执行标准答案 SQL并计时
                 long startExpected = System.currentTimeMillis();
-                ResultSet expectedRs = stmt.executeQuery(expectedSql);
+                boolean isQueryExpected = expectedSql.trim().toUpperCase().startsWith("SELECT");
+                if (isQueryExpected) {
+                    ResultSet expectedRs = stmt.executeQuery(expectedSql);  // 如果是查询语句，使用 executeQuery
+                    expectedResult = extractResult(expectedRs);
+                } else {
+                    stmt.execute(expectedSql);  // 如果是 DDL 语句，使用 execute
+                    expectedResult = null;  // DDL 语句没有查询结果
+                }
                 expectedExecutionTime = System.currentTimeMillis() - startExpected;
-                expectedResult = extractResult(expectedRs);
                 conn.rollback();
             }
+
             // ③ 比较用户 SQL 和标准答案 SQL 的执行结果
-            String comparison = userResult.equals(expectedResult) ? "CORRECT" : "WRONG";
+            String comparison;
+            if (userResult == null && expectedResult == null) {
+                comparison = "CORRECT";  // 如果两者都是 null，则认为是正确的
+            } else if (userResult != null && userResult.equals(expectedResult)) {
+                comparison = "CORRECT";  // 如果两者都不为 null 并且相等，则认为是正确的
+            } else {
+                comparison = "WRONG";  // 否则为错误
+            }
             response.setComparison(comparison);
             response.setUserResult(userResult);
             response.setExpectedResult(expectedResult);

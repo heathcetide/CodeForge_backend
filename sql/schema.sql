@@ -154,7 +154,6 @@ CREATE TABLE exam
     max_attempts        INT        DEFAULT 1 COMMENT '最大尝试次数',
     available_from      DATETIME COMMENT '考试开放时间',
     available_until     DATETIME COMMENT '考试截止时间',
-    question_bank       JSON COMMENT '题库配置',
     shuffle_questions   TINYINT(1) DEFAULT 1 COMMENT '是否乱序题目',
     show_answers        TINYINT(1) DEFAULT 0 COMMENT '是否显示正确答案',
     proctoring_settings JSON COMMENT '监考配置（如屏幕录制）'
