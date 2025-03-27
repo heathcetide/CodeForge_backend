@@ -101,9 +101,9 @@ code-forge:
     license: MIT
 
 cos:
-  secret-id: AKIDMZcWFqEQRI5saAYigS8aqwpWzHMI0Tjk
-  secret-key: rUwAAyZy99ya0DD1d3xjIdnlrnY6SaWG
+  secret-id: AKIDEI7f5KMAkCQPAi27xd5JJ4clhOq31kET
+  secret-key: 1nM6dx3vb3HG0WoshIemgLmzyjGZeU6U
   duration-seconds: 1800
-  bucket: code-forge-1349517476
+  bucket: cetide-1325039295
   region: ap-chengdu
-  app-id: 1349517476
+  app-id: 1325039295

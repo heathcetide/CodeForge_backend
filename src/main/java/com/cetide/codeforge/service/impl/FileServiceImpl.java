@@ -19,8 +19,6 @@ public class FileServiceImpl implements FileService {
     JsonUtil jsonUtil;
 
     public String createTemporaryKey() {
-        String key = temporaryUtil.getTemporaryCredentials();
-        String jsonKey = jsonUtil.convertToJson(key);
-        return jsonKey;
+        return jsonUtil.convertToJson(temporaryUtil.getTemporaryCredentials());
     }
 }

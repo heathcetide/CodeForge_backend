@@ -1,5 +1,8 @@
 package com.cetide.codeforge.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
 import java.util.TreeMap;
 
 
@@ -18,7 +21,6 @@ public class TemporaryUtil {
 
     @Resource
     CosProperties cosProperties;
-
 
     public String getTemporaryCredentials() {
         TreeMap<String, Object> config = new TreeMap<String, Object>();
