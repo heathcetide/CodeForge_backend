@@ -94,7 +94,7 @@ security:
 code-forge:
   name: CodeForge
   version: @project.version@  # Maven属性注入
-  build-time: "2024-03-19 12:00:00"
+  build-time: "2024-03-26 20:15:23"
   copyright:
     owner: CodeForge Team
     since-year: 2024
