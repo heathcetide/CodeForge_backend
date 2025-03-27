@@ -60,15 +60,6 @@ public class AlgorithmUtils {
         return (double) commonWords / Math.max(words1.length, words2.length);
     }
 
-
-
-
-
-
-
-
-
-
     // 计算每篇文章的权重（基于相似度）
     public static List<ArticleWithWeight> calculateArticleWeights(List<Article> articles) {
         List<ArticleWithWeight> articlesWithWeights = new ArrayList<>();
@@ -110,6 +101,7 @@ public class AlgorithmUtils {
         return Arrays.copyOf(cumulativeWeights, cumulativeWeights.length - 1);
     }
 
+
     public static List<Article> selectWeightedRandomArticles(List<ArticleWithWeight> articlesWithWeights, int num) {
         // 计算总权重
         double totalWeight = articlesWithWeights.stream().mapToDouble(ArticleWithWeight::getWeight).sum();
@@ -137,17 +129,22 @@ public class AlgorithmUtils {
             double randomValue = rand.nextDouble() * totalWeight;
 
             // 二分查找找到应该选择的文章
-            // 在调用 binarySearch 时将 List<Double> 转换为 double[]
             int index = binarySearch(cumulativeWeights.stream().mapToDouble(Double::doubleValue).toArray(), randomValue);
 
-            // 选择文章
-            selectedArticles.add(articlesWithWeights.get(index).getArticle());
+            // 确保索引在有效范围内
+            if (index >= 0 && index < articlesWithWeights.size()) {
+                // 选择文章
+                selectedArticles.add(articlesWithWeights.get(index).getArticle());
 
-            // 移除已选择的文章
-            articlesWithWeights.remove(index);
-            cumulativeWeights = updateCumulativeWeights(cumulativeWeights, index);
+                // 移除已选择的文章
+                articlesWithWeights.remove(index);
+                cumulativeWeights = updateCumulativeWeights(cumulativeWeights, index);
 
-            selectedCount++;
+                selectedCount++;
+            } else {
+                // If index is invalid, break the loop or handle accordingly
+                break;
+            }
         }
 
         return selectedArticles;
@@ -156,9 +153,11 @@ public class AlgorithmUtils {
     // 更新累计权重列表
     private static List<Double> updateCumulativeWeights(List<Double> cumulativeWeights, int index) {
         cumulativeWeights.remove(index);  // 移除已选择的文章
+        // Update remaining cumulative weights
         for (int i = index; i < cumulativeWeights.size(); i++) {
             cumulativeWeights.set(i, cumulativeWeights.get(i) - cumulativeWeights.get(index));
         }
         return cumulativeWeights;
     }
+
 }

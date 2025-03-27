@@ -4,12 +4,15 @@ import com.cetide.codeforge.config.FileStorageContext;
 import com.cetide.codeforge.model.enums.StorageType;
 import com.cetide.codeforge.service.FileStorageService;
 import com.cetide.codeforge.common.ApiResponse;
+import com.cetide.codeforge.service.impl.FileServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 
 @RestController
@@ -17,8 +20,15 @@ import java.io.IOException;
 @Tag(name = "文件存储模块")
 public class FileController {
 
-    @Autowired
-    private FileStorageContext fileStorageContext;
+    private final FileStorageContext fileStorageContext;
+
+    private final FileServiceImpl fileService;
+
+    public FileController(FileStorageContext fileStorageContext, FileServiceImpl fileService) {
+        this.fileStorageContext = fileStorageContext;
+        this.fileService = fileService;
+    }
+
 
     /**
      * 上传文件
@@ -75,5 +85,16 @@ public class FileController {
         FileStorageService storageService = fileStorageContext.getStorageService(storageType);
         storageService.deleteFile(filePath);
         return ApiResponse.success("文件删除成功");
+    }
+
+
+    /**
+     * 获取文件上传临时密钥
+     */
+    @GetMapping("/temp/secret")
+    @ApiOperation("获取文件上传临时密钥")
+    public ApiResponse<String> getTemporaryKey(){
+        String key = fileService.createTemporaryKey();
+        return ApiResponse.success(key);
     }
 }
