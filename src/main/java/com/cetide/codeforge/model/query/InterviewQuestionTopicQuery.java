@@ -1,0 +1,44 @@
+package com.cetide.codeforge.model.query;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.groups.Default;
+import io.swagger.annotations.ApiModelProperty;
+
+/**
+ * 面试题专题查询对象
+ *
+ * @author DELL
+ * @date 2025-03-25 09:59:14
+ */
+public class InterviewQuestionTopicQuery {
+
+    /**
+     * 分页索引: 分页查询的索引
+     */
+    @NotNull(groups = { QueryGroup.class, Default.class }, message = "分页索引不能为空")
+    @ApiModelProperty(value = "分页索引: 分页查询的索引")
+    private Integer pageIndex;
+
+    /**
+     * 分页大小: 分页查询的大小
+     */
+    @NotNull(groups = { QueryGroup.class, Default.class }, message = "分页大小不能为空")
+    @ApiModelProperty(value = "分页大小: 分页查询的大小")
+    private Integer pageSize;
+
+    public @NotNull(groups = {QueryGroup.class, Default.class}, message = "分页索引不能为空") Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(@NotNull(groups = {QueryGroup.class, Default.class}, message = "分页索引不能为空") Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public @NotNull(groups = {QueryGroup.class, Default.class}, message = "分页大小不能为空") Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(@NotNull(groups = {QueryGroup.class, Default.class}, message = "分页大小不能为空") Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+}

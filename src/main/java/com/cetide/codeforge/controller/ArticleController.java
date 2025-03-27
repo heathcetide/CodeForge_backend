@@ -62,6 +62,9 @@ public class ArticleController {
     @Resource
     ArticleLikeServiceImpl likeService;
 
+    /**
+     * 文章点赞功能
+     */
     @PutMapping("/{articleId}")
     @ApiOperation("点赞")
     public ApiResponse<String> like(@PathVariable("articleId") Long articleId) throws ServiceException {
@@ -70,6 +73,9 @@ public class ArticleController {
         return ApiResponse.success("点赞成功");
     }
 
+    /**
+     * 文章取消点赞功能
+     */
     @PutMapping("/cancel/{articleId}")
     @ApiOperation("取消点赞")
     public ApiResponse<String> disLike(@PathVariable("articleId") Long articleId){
@@ -125,18 +131,6 @@ public class ArticleController {
     }
 
     /**
-     * 获取图片的完整URL
-     * @param imageName 图片名称，如：849f1bea-636c-4179-a72a-3da0c222e606.jpg
-     * @return 图片的完整URL
-     */
-    @ApiOperation("获取文章封面图片URL")
-    @GetMapping("/uploads/{imageName}")
-    public String getImage(@PathVariable String imageName) {
-        return "http://localhost:8080/api/articles/uploads/" + imageName;
-    }
-
-
-    /**
      * 创建文章
      * @param request 文章创建请求
      * @return 文章
@@ -178,6 +172,10 @@ public class ArticleController {
         }
     }
 
+    /**
+     * 根据文章id获取文章
+     * @param id 文章id
+     */
     @ApiOperation("根据ID获取文章")
     @GetMapping("/views/{id}")
     public ApiResponse<Article> getArticleById(@Parameter(description = "文章ID") @PathVariable Long id) {
@@ -198,7 +196,9 @@ public class ArticleController {
         return ApiResponse.success(article);
     }
 
-
+    /**
+     * 更新文章内容
+     */
     @ApiOperation("更新文章")
     @PutMapping("/views/{id}")
     public ApiResponse<Article> updateArticle(
@@ -209,13 +209,9 @@ public class ArticleController {
         return updated ? ApiResponse.success(article) : ApiResponse.error(400, "更新失败");
     }
 
-    @ApiOperation("删除文章")
-    @DeleteMapping("/views/{id}")
-    public ApiResponse<Boolean> deleteArticle(@Parameter(description = "文章ID") @PathVariable Long id) {
-        boolean isDeleted = articleService.removeById(id);
-        return isDeleted ? ApiResponse.success(true) : ApiResponse.error(400, "删除失败，文章未找到");
-    }
-
+    /**
+     * 删除文章
+     */
     @ApiOperation("软删除文章")
     @DeleteMapping("/views/{id}/soft")
     public ApiResponse<Boolean> softDeleteArticle(@Parameter(description = "文章ID") @PathVariable Long id) {
@@ -223,17 +219,9 @@ public class ArticleController {
         return isSoftDeleted ? ApiResponse.success(true) : ApiResponse.error(400, "软删除失败，文章未找到");
     }
 
-    @PutMapping("/views/{id}/views")
-    public ApiResponse<Article> incrementViews(@PathVariable Long id) {
-        Article article = articleService.getById(id);
-        if (article == null) {
-            return ApiResponse.error(400, "文章未找到");
-        }
-        article.setViewCount(article.getViewCount() + 1);
-        articleService.updateById(article);
-        return ApiResponse.success(article);
-    }
-
+    /**
+     * 根据分类获取文章
+     */
     @ApiOperation("根据分类获取文章")
     @GetMapping("/category/{category}")
     public ApiResponse<List<Article>> getByCategory(@PathVariable String category) {
@@ -242,59 +230,6 @@ public class ArticleController {
                 .list();
         return ApiResponse.success(articles);
     }
-
-    @ApiOperation("根据标签获取文章")
-    @GetMapping("/tag/{tag}")
-    public ApiResponse<List<Article>> getByTag(@PathVariable String tag) {
-        List<Article> articles = articleService.lambdaQuery()
-                .apply("JSON_CONTAINS(tags, '\"{0}\"')", tag)
-                .list();
-        return ApiResponse.success(articles);
-    }
-
-    /**
-     * 搜索文章
-     * @param keyword 关键字
-     * @param page 页码
-     * @param size 大小
-     * @return 文章数据
-     */
-    @ApiOperation("根据关键词搜索文章")
-    @GetMapping("/search")
-    public ApiResponse<Page<Article>> searchArticles(
-            @Parameter(description = "搜索关键词") @RequestParam String keyword,
-            @Parameter(description = "页码") @RequestParam(defaultValue = "1") Integer page,
-            @Parameter(description = "每页数量") @RequestParam(defaultValue = "10") Integer size) {
-
-        LambdaQueryWrapper<Article> query = new LambdaQueryWrapper<>();
-        query.like(Article::getTitle, keyword)
-                .or().like(Article::getContent, keyword);
-        Page<Article> articlePage = articleService.page(new Page<>(page, size), query);
-        return ApiResponse.success(articlePage);
-    }
-
-    @ApiOperation("高级文章搜索")
-    @GetMapping("/advanced-search")
-    public ApiResponse<Page<Article>> advancedSearch(
-            @Parameter(description = "关键词") @RequestParam(required = false) String keyword,
-            @Parameter(description = "分类ID") @RequestParam(required = false) Long categoryId,
-            @Parameter(description = "标签") @RequestParam(required = false) String tag,
-            @Parameter(description = "开始时间") @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @Parameter(description = "结束时间") @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @Parameter(description = "页码") @RequestParam(defaultValue = "1") Integer page,
-            @Parameter(description = "每页数量") @RequestParam(defaultValue = "10") Integer size) {
-
-        return ApiResponse.success(articleService.advancedSearch(
-                new ArticleSearchParam()
-                        .setKeyword(keyword)
-                        .setCategoryId(categoryId)
-                        .setTag(tag)
-                        .setStartDate(startDate)
-                        .setEndDate(endDate),
-                new Page<>(page, size)
-        ));
-    }
-
 
     @ApiOperation("根据推荐数量推荐相关文章")
     @GetMapping("/recommend")
