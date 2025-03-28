@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -11,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
  *
  * @author heathcetide
  */
-@TableName("interview_questions")
+@TableName("interview_question")
 public class InterviewQuestion {
 
     /**
@@ -19,13 +21,7 @@ public class InterviewQuestion {
      */
     @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "题目ID: 题目ID")
-    private Integer questionId;
-
-    /**
-     * 类别ID: 类别ID
-     */
-    @ApiModelProperty(value = "类别ID: 类别ID")
-    private Integer categoryId;
+    private Integer id;
 
     /**
      * 专题ID: 专题ID
@@ -49,33 +45,34 @@ public class InterviewQuestion {
      * 创建人: 创建人
      */
     @ApiModelProperty(value = "创建人: 创建人")
-    private Integer createBy;
+    private Long createBy;
 
     /**
      * 创建时间: 创建时间
      */
     @ApiModelProperty(value = "创建时间: 创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 修改人: 修改人
      */
     @ApiModelProperty(value = "修改人: 修改人")
-    private Integer updateBy;
+    private Long updateBy;
 
     /**
      * 修改时间: 修改时间
      */
     @ApiModelProperty(value = "修改时间: 修改时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     public InterviewQuestion(){
 
     }
 
-    public InterviewQuestion(Integer questionId, Integer categoryId, Integer topicId, String questionText, String answerText, Integer createBy, Date createTime, Integer updateBy, Date updateTime) {
-        this.questionId = questionId;
-        this.categoryId = categoryId;
+    public InterviewQuestion(Integer id, Integer topicId, String questionText, String answerText, Long createBy, Date createTime, Long updateBy, Date updateTime) {
+        this.id = id;
         this.topicId = topicId;
         this.questionText = questionText;
         this.answerText = answerText;
@@ -85,20 +82,12 @@ public class InterviewQuestion {
         this.updateTime = updateTime;
     }
 
-    public Integer getQuestionId() {
-        return questionId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setQuestionId(Integer questionId) {
-        this.questionId = questionId;
-    }
-
-    public Integer getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getTopicId() {
@@ -125,14 +114,6 @@ public class InterviewQuestion {
         this.answerText = answerText;
     }
 
-    public Integer getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Integer createBy) {
-        this.createBy = createBy;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -141,19 +122,27 @@ public class InterviewQuestion {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Integer updateBy) {
-        this.updateBy = updateBy;
-    }
-
     public Date getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Long getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Long createBy) {
+        this.createBy = createBy;
+    }
+
+    public Long getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
     }
 }

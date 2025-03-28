@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  *
  * @author heathcetide
  */
-@TableName("interview_question_topics")
+@TableName("interview_question_topic")
 public class InterviewQuestionTopic {
 
     /**
@@ -19,7 +19,7 @@ public class InterviewQuestionTopic {
      */
     @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "专题ID: 专题ID")
-    private Integer topicId;
+    private Long id;
 
     /**
      * 专题名称: 专题名称
@@ -51,12 +51,15 @@ public class InterviewQuestionTopic {
     @ApiModelProperty(value = "修改时间: 修改时间")
     private Date updateTime;
 
-    public Integer getTopicId() {
-        return topicId;
+    @ApiModelProperty(value = "专题图片")
+    private String coverImage;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setTopicId(Integer topicId) {
-        this.topicId = topicId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTopicName() {
@@ -97,5 +100,13 @@ public class InterviewQuestionTopic {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
     }
 }

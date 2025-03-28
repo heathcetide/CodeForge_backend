@@ -2,7 +2,6 @@ package com.cetide.codeforge.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cetide.codeforge.model.entity.InterviewQuestion;
-import com.cetide.codeforge.model.entity.InterviewQuestionCategory;
 import com.cetide.codeforge.model.entity.InterviewQuestionTopic;
 import com.cetide.codeforge.model.query.InterviewQuestionQuery;
 import java.util.List;
@@ -13,16 +12,6 @@ import java.util.List;
  * @author heathcetide
  */
 public interface InterviewQuestionsService extends IService<InterviewQuestion> {
-
-    /**
-     * categories
-     */
-    List<InterviewQuestionCategory> getAllCategories();
-
-    /**
-     * topics
-     */
-    List<InterviewQuestionTopic> getAllTopics();
 
     /**
      * questions-by-category

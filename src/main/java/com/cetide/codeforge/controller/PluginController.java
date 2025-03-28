@@ -45,6 +45,7 @@ public class PluginController {
 
         // 步骤4：检查依赖
 
+
         // 步骤5：创建隔离环境
         Path workDir = createWorkDirectory(meta.getId());
         PluginIsolationContainer container = new PluginIsolationContainer(tempFile, workDir);
