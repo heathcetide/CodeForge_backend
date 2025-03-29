@@ -2,15 +2,15 @@
 CREATE TABLE course
 (
     id              BIGINT PRIMARY KEY AUTO_INCREMENT,
-    title           VARCHAR(100)                                  NOT NULL,
+    title           VARCHAR(100) NOT NULL,
     description     TEXT,
-    level           VARCHAR(10)                                   NOT NULL COMMENT 'P2/P3/P4',
+    level           VARCHAR(10)  NOT NULL COMMENT 'P2/P3/P4',
     category_id     BIGINT,
     difficulty      ENUM ('BEGINNER', 'INTERMEDIATE', 'ADVANCED') NOT NULL DEFAULT 'BEGINNER',
     cover_image     VARCHAR(255),
     estimated_hours INT COMMENT '预计学习时长（小时）',
-    star_rating     DECIMAL(3, 2)                                          DEFAULT 0.00 COMMENT '课程评分（0-5）',
-    enroll_count    INT                                                    DEFAULT 0 COMMENT '报名人数',
+    star_rating     DECIMAL(3, 2) DEFAULT 0.00 COMMENT '课程评分（0-5）',
+    enroll_count    INT           DEFAULT 0 COMMENT '报名人数',
     is_recommended  TINYINT(1)                                             DEFAULT 0 COMMENT '是否推荐课程',
     keywords        VARCHAR(255) COMMENT '搜索关键词（逗号分隔）',
     status          ENUM ('DRAFT', 'PUBLISHED', 'ARCHIVED')                DEFAULT 'DRAFT' COMMENT '课程状态',
@@ -19,16 +19,16 @@ CREATE TABLE course
 
 CREATE TABLE chapter
 (
-    id               BIGINT PRIMARY KEY AUTO_INCREMENT,                                          -- 章节ID
-    course_id        BIGINT       NOT NULL,                                                      -- 关联课程ID
-    parent_id        BIGINT                            DEFAULT 0 COMMENT '父章节ID，0表示根节点', -- 父章节ID
-    title            VARCHAR(100) NOT NULL,                                                      -- 章节标题
-    order_index      INT          NOT NULL COMMENT '排序序号',                                   -- 章节排序
-    is_leaf          TINYINT(1)   NOT NULL COMMENT '是否是叶子节点（最小节）',                     -- 判断是否为叶子节点（如果是最终小节）
+    id               BIGINT PRIMARY KEY AUTO_INCREMENT,                      -- 章节ID
+    course_id        BIGINT       NOT NULL,                                  -- 关联课程ID
+    parent_id        BIGINT DEFAULT 0 COMMENT '父章节ID，0表示根节点',        -- 父章节ID
+    title            VARCHAR(100) NOT NULL,                                  -- 章节标题
+    order_index      INT          NOT NULL COMMENT '排序序号',               -- 章节排序
+    is_leaf          TINYINT(1)   NOT NULL COMMENT '是否是叶子节点（最小节）', -- 判断是否为叶子节点（如果是最终小节）
     content_type     ENUM ('VIDEO', 'ARTICLE', 'QUIZ') DEFAULT 'VIDEO' COMMENT '内容类型（视频、文章、测验）',
-    duration_minutes INT COMMENT '预计学习时长（分钟）',                                           -- 预计学习时长
-    attachment_url   VARCHAR(255) COMMENT '附件资源地址',                                        -- 附件地址（例如课件、文档）
-    markdown_content TEXT COMMENT '章节内容，支持Markdown语法'                                    -- 支持Markdown格式的内容，文本+视频
+    duration_minutes INT COMMENT '预计学习时长（分钟）',                       -- 预计学习时长
+    attachment_url   VARCHAR(255) COMMENT '附件资源地址',                    -- 附件地址（例如课件、文档）
+    markdown_content TEXT COMMENT '章节内容，支持Markdown语法'                -- 支持Markdown格式的内容，文本+视频
 );
 
 -- 作业表
@@ -40,7 +40,7 @@ CREATE TABLE assignment
     template_code      TEXT        NOT NULL,
     test_cases         JSON        NOT NULL COMMENT '测试用例（JSON格式）',
     pass_rule          VARCHAR(50) NOT NULL COMMENT '通过规则（如输出匹配）',
-    max_attempts       INT        DEFAULT -1 COMMENT '最大尝试次数（-1表示不限）',
+    max_attempts       INT DEFAULT -1 COMMENT '最大尝试次数（-1表示不限）',
     allow_retry        TINYINT(1) DEFAULT 1 COMMENT '是否允许失败后重试',
     hint               TEXT COMMENT '作业提示',
     start_date         DATETIME COMMENT '作业开放时间',
@@ -113,26 +113,26 @@ VALUES (1,
 CREATE TABLE user_progress
 (
     id                 BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id            BIGINT                                           NOT NULL,
-    chapter_id         BIGINT                                           NOT NULL,
+    user_id            BIGINT NOT NULL,
+    chapter_id         BIGINT NOT NULL,
     status             ENUM ('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED') NOT NULL DEFAULT 'NOT_STARTED',
     completed_at       DATETIME,
-    total_time_spent   INT                                                       DEFAULT 0 COMMENT '总学习时长（分钟）',
+    total_time_spent   INT DEFAULT 0 COMMENT '总学习时长（分钟）',
     last_accessed      DATETIME COMMENT '最后访问时间',
     quiz_score         INT COMMENT '测验分数',
     first_completed_at DATETIME COMMENT '首次完成时间',
     best_score         INT COMMENT '最佳成绩',
-    review_count       INT                                                       DEFAULT 0 COMMENT '复习次数',
+    review_count       INT DEFAULT 0 COMMENT '复习次数',
     learning_path      JSON COMMENT '个性化学习路径配置'
 );
 
 CREATE TABLE user_course
 (
-    id           BIGINT PRIMARY KEY AUTO_INCREMENT,  -- 中间表的ID
-    user_id      BIGINT NOT NULL,                    -- 用户ID
-    course_id    BIGINT NOT NULL,                    -- 课程ID
-    enroll_date  DATETIME DEFAULT CURRENT_TIMESTAMP, -- 用户报名日期
-    progress     ENUM ('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'NOT_STARTED' -- 学习进度
+    id          BIGINT PRIMARY KEY AUTO_INCREMENT,                                     -- 中间表的ID
+    user_id     BIGINT NOT NULL,                                                       -- 用户ID
+    course_id   BIGINT NOT NULL,                                                       -- 课程ID
+    enroll_date DATETIME DEFAULT CURRENT_TIMESTAMP,                                    -- 用户报名日期
+    progress    ENUM ('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'NOT_STARTED' -- 学习进度
 );
 
 -- 新增课程分类表
@@ -147,11 +147,11 @@ CREATE TABLE course_category
 CREATE TABLE exam
 (
     id                  BIGINT PRIMARY KEY AUTO_INCREMENT,
-    chapter_id          BIGINT                              NOT NULL UNIQUE,
+    chapter_id          BIGINT NOT NULL UNIQUE,
     exam_type           ENUM ('CHAPTER_TEST', 'FINAL_EXAM') NOT NULL,
-    pass_score          INT                                 NOT NULL,
+    pass_score          INT    NOT NULL,
     description         TEXT COMMENT '考试说明',
-    max_attempts        INT        DEFAULT 1 COMMENT '最大尝试次数',
+    max_attempts        INT DEFAULT 1 COMMENT '最大尝试次数',
     available_from      DATETIME COMMENT '考试开放时间',
     available_until     DATETIME COMMENT '考试截止时间',
     shuffle_questions   TINYINT(1) DEFAULT 1 COMMENT '是否乱序题目',
@@ -159,7 +159,8 @@ CREATE TABLE exam
     proctoring_settings JSON COMMENT '监考配置（如屏幕录制）'
 );
 
-# 题目表
+#
+题目表
 CREATE TABLE sql_question
 (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -174,7 +175,8 @@ CREATE TABLE sql_question
     FOREIGN KEY (exam_id) REFERENCES exam (id) ON DELETE CASCADE
 );
 
-# 用户答题记录表
+#
+用户答题记录表
 CREATE TABLE sql_submission
 (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -183,7 +185,7 @@ CREATE TABLE sql_submission
     submitted_sql TEXT   NOT NULL,
     result_json   JSON COMMENT '执行结果 JSON（可选保存）',
     is_correct    TINYINT(1) DEFAULT 0,
-    created_at    DATETIME   DEFAULT CURRENT_TIMESTAMP,
+    created_at    DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (question_id) REFERENCES sql_question (id) ON DELETE CASCADE
 );
 
@@ -192,18 +194,18 @@ CREATE TABLE sql_submission
 CREATE TABLE user_note
 (
     id             BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id        BIGINT     NOT NULL,
-    chapter_id     BIGINT     NOT NULL,
-    content        TEXT       NOT NULL,
+    user_id        BIGINT NOT NULL,
+    chapter_id     BIGINT NOT NULL,
+    content        TEXT   NOT NULL,
     is_public      TINYINT(1) NOT NULL                      DEFAULT 0,
-    created_at     DATETIME                                 DEFAULT CURRENT_TIMESTAMP,
+    created_at     DATETIME    DEFAULT CURRENT_TIMESTAMP,
     updated_at     DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    like_count     INT                                      DEFAULT 0 COMMENT '点赞数',
-    bookmark_count INT                                      DEFAULT 0 COMMENT '收藏数',
-    comment_count  INT                                      DEFAULT 0 COMMENT '评论数',
+    like_count     INT         DEFAULT 0 COMMENT '点赞数',
+    bookmark_count INT         DEFAULT 0 COMMENT '收藏数',
+    comment_count  INT         DEFAULT 0 COMMENT '评论数',
     tags           VARCHAR(255) COMMENT '笔记标签（逗号分隔）',
-    language       VARCHAR(10)                              DEFAULT 'zh' COMMENT '笔记语言',
-    version        INT                                      DEFAULT 1 COMMENT '版本号（支持历史版本）',
+    language       VARCHAR(10) DEFAULT 'zh' COMMENT '笔记语言',
+    version        INT         DEFAULT 1 COMMENT '版本号（支持历史版本）',
     audit_status   ENUM ('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING' COMMENT '审核状态',
     audit_remark   TEXT COMMENT '审核备注'
 );
@@ -212,15 +214,15 @@ CREATE TABLE user_note
 CREATE TABLE point_record
 (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id       BIGINT                                                 NOT NULL,
+    user_id       BIGINT NOT NULL,
     type          ENUM ('DAILY_LOGIN', 'COMPLETE_CHAPTER', 'SHARE_NOTE') NOT NULL,
-    points        INT                                                    NOT NULL,
+    points        INT    NOT NULL,
     description   VARCHAR(255),
     created_at    DATETIME DEFAULT CURRENT_TIMESTAMP,
     related_id    BIGINT COMMENT '关联ID（如章节ID、考试ID等）',
     expired_at    DATETIME COMMENT '积分过期时间',
     source_detail VARCHAR(255) COMMENT '来源详情',
-    INDEX idx_user_points (user_id, created_at)
+    INDEX         idx_user_points (user_id, created_at)
 );
 
 INSERT INTO course (title, description, level, category_id, difficulty, cover_image, estimated_hours, star_rating,
@@ -247,69 +249,112 @@ VALUES ('MySQL 入门教程', '本课程适合零基础学习者，讲解MySQL�
         'ADVANCED', 'https://via.placeholder.com/200', 70, 5.0, 300, 1, 'MySQL,高级实践,精通', 'PUBLISHED', 0);
 
 
-CREATE TABLE user_matches (
-                              match_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '比赛ID',
-                              user_id1 INT NOT NULL COMMENT '用户1 ID',
-                              user_id2 INT NOT NULL COMMENT '用户2 ID',
-                              match_start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '比赛开始时间',
-                              match_end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '比赛结束时间',
-                              winner_user_id INT COMMENT '胜者用户ID',
-                              create_by INT COMMENT '创建人',
-                              create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                              update_by INT COMMENT '修改人',
-                              update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+CREATE TABLE user_matches
+(
+    match_id         INT PRIMARY KEY AUTO_INCREMENT COMMENT '比赛ID',
+    user_id1         INT       NOT NULL COMMENT '用户1 ID',
+    user_id2         INT       NOT NULL COMMENT '用户2 ID',
+    match_start_time TIMESTAMP          DEFAULT CURRENT_TIMESTAMP COMMENT '比赛开始时间',
+    match_end_time   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '比赛结束时间',
+    winner_user_id   INT COMMENT '胜者用户ID',
+    create_by        INT COMMENT '创建人',
+    create_time      TIMESTAMP          DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by        INT COMMENT '修改人',
+    update_time      TIMESTAMP          DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) COMMENT '用户匹配PK表';
 
-CREATE TABLE user_answers (
-                              answer_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '答案记录ID',
-                              user_id INT NOT NULL COMMENT '用户ID',
-                              question_id INT NOT NULL COMMENT '题目ID',
-                              user_answer TEXT NOT NULL COMMENT '用户答案',
-                              is_correct BOOLEAN COMMENT '答案是否正确',
-                              answer_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '作答时间',
-                              create_by INT COMMENT '创建人',
-                              create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                              update_by INT COMMENT '修改人',
-                              update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+CREATE TABLE user_answers
+(
+    answer_id   INT PRIMARY KEY AUTO_INCREMENT COMMENT '答案记录ID',
+    user_id     INT  NOT NULL COMMENT '用户ID',
+    question_id INT  NOT NULL COMMENT '题目ID',
+    user_answer TEXT NOT NULL COMMENT '用户答案',
+    is_correct  BOOLEAN COMMENT '答案是否正确',
+    answer_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '作答时间',
+    create_by   INT COMMENT '创建人',
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by   INT COMMENT '修改人',
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) COMMENT '用户作答记录表';
 
-CREATE TABLE question_popularity (
-                                     popularity_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '热度ID',
-                                     question_id INT NOT NULL COMMENT '题目ID',
-                                     popularity_score INT DEFAULT 0 COMMENT '热度分数',
-                                     last_tested TIMESTAMP COMMENT '最后被测试的时间',
-                                     create_by INT COMMENT '创建人',
-                                     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                     update_by INT COMMENT '修改人',
-                                     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+CREATE TABLE question_popularity
+(
+    popularity_id    INT PRIMARY KEY AUTO_INCREMENT COMMENT '热度ID',
+    question_id      INT NOT NULL COMMENT '题目ID',
+    popularity_score INT       DEFAULT 0 COMMENT '热度分数',
+    last_tested      TIMESTAMP COMMENT '最后被测试的时间',
+    create_by        INT COMMENT '创建人',
+    create_time      TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by        INT COMMENT '修改人',
+    update_time      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) COMMENT '题目热度表';
 
-CREATE TABLE interview_questions (
-                                     question_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '题目ID',
-                                     category_id INT NOT NULL COMMENT '类别ID',
-                                     topic_id INT NOT NULL COMMENT '专题ID',
-                                     question_text TEXT NOT NULL COMMENT '题目内容',
-                                     answer_text TEXT NOT NULL COMMENT '答案内容',
-                                     create_by INT COMMENT '创建人',
-                                     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                     update_by INT COMMENT '修改人',
-                                     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+CREATE TABLE interview_questions
+(
+    question_id   INT PRIMARY KEY AUTO_INCREMENT COMMENT '题目ID',
+    category_id   INT  NOT NULL COMMENT '类别ID',
+    topic_id      INT  NOT NULL COMMENT '专题ID',
+    question_text TEXT NOT NULL COMMENT '题目内容',
+    answer_text   TEXT NOT NULL COMMENT '答案内容',
+    create_by     INT COMMENT '创建人',
+    create_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by     INT COMMENT '修改人',
+    update_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) COMMENT '面试题库表';
 
-CREATE TABLE interview_question_topics (
-                                           topic_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '专题ID',
-                                           topic_name VARCHAR(255) NOT NULL COMMENT '专题名称',
-                                           create_by INT COMMENT '创建人',
-                                           create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                           update_by INT COMMENT '修改人',
-                                           update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+CREATE TABLE interview_question_topics
+(
+    topic_id    INT PRIMARY KEY AUTO_INCREMENT COMMENT '专题ID',
+    topic_name  VARCHAR(255) NOT NULL COMMENT '专题名称',
+    create_by   INT COMMENT '创建人',
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by   INT COMMENT '修改人',
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) COMMENT '面试题专题表';
 
-CREATE TABLE interview_question_categories (
-                                               category_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '类别ID',
-                                               category_name VARCHAR(255) NOT NULL COMMENT '类别名称',
-                                               create_by INT COMMENT '创建人',
-                                               create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                               update_by INT COMMENT '修改人',
-                                               update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+CREATE TABLE interview_question_categories
+(
+    category_id   INT PRIMARY KEY AUTO_INCREMENT COMMENT '类别ID',
+    category_name VARCHAR(255) NOT NULL COMMENT '类别名称',
+    create_by     INT COMMENT '创建人',
+    create_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by     INT COMMENT '修改人',
+    update_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) COMMENT '面试题分类表';
+
+
+INSERT INTO interview_question_categories (category_name, create_by, create_time, update_by, update_time)
+VALUES ('编程语言', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('并发与多线程', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('系统与架构', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('数据库与存储', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('框架与工具', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('算法与数据结构', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('设计模式与原则', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('调试与测试', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('性能优化', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('安全与加密', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+
+INSERT INTO interview_question_topics (topic_name, create_by, create_time, update_by, update_time)
+VALUES ('Java 基础', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('多线程与并发', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('异常与错误处理', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('Java 集合与流', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('I/O 流与文件处理', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('JVM 内存管理', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('反射与动态代理', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('设计模式', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('JDBC 与数据库操作', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+       ('Spring 框架', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO interview_questions (category_id, topic_id, question_text, answer_text, create_by, create_time, update_by, update_time)
+VALUES
+    (1, 1, '请简要介绍一下 Java 中的继承机制及其特点。', 'Java 中的继承机制允许子类继承父类的属性和方法，子类可以重写父类的方法，并且可以通过 super 关键字访问父类的成员。继承有助于代码复用和扩展性，但过度使用可能导致代码复杂度增加。', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+    (2, 1, 'Java 中的接口和抽象类有什么区别？', '接口是纯粹的抽象类，只能包含常量和抽象方法，而抽象类可以包含成员变量和已实现的方法。接口支持多继承，而抽象类只支持单继承。', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+    (3, 2, 'Java 中的多线程是如何实现的？', 'Java 中的多线程可以通过继承 Thread 类或者实现 Runnable 接口来实现。线程的生命周期包括新建、就绪、运行、阻塞和死亡。', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+    (4, 2, '请简述一下 Java 中的线程同步机制。', 'Java 提供了 synchronized 关键字来实现线程同步，确保同一时刻只有一个线程能执行被同步的代码块，避免数据竞争。', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+    (1, 3, '请介绍一下 Java 中的异常处理机制。', 'Java 中的异常处理机制使用 try-catch 块捕获并处理异常，finally 块可以用于释放资源。通过抛出异常可以将错误信息传递给调用者。', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+    (2, 3, 'Java 中的垃圾回收机制是如何工作的？', 'Java 使用垃圾回收器来自动回收不再被引用的对象。垃圾回收机制通过标记、清除和压缩等步骤来管理内存。', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+    (3, 4, 'Java 中的集合框架有哪些常用的类？', 'Java 中常用的集合类有 List（如 ArrayList、LinkedList）、Set（如 HashSet）、Map（如 HashMap）。每种集合类的底层实现不同，适用于不同的场景。', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+    (1, 4, '简述 Java 中的反射机制。', 'Java 反射机制允许程序在运行时加载和使用类的信息，能动态调用类的方法和访问字段。反射常用于框架设计和动态代理。', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+    (2, 5, '请介绍一下 Java 中的 I/O 流。', 'Java 中的 I/O 流主要分为字节流和字符流，字节流适用于处理所有类型的数据，字符流适用于处理文本数据。常用的类有 FileInputStream、FileOutputStream、BufferedReader 和 BufferedWriter。', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),
+    (3, 5, '什么是 Java 中的 Lambda 表达式？', 'Lambda 表达式是一种简洁的表示匿名方法的方式，可以作为方法的参数传递，实现函数式编程。语法为 (参数) -> 表达式。', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
