@@ -265,7 +265,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (userMapper.insert(user) != 1) {
                 throw new BusinessException("注册失败, 请联系站长");
             }
-            emailService.sendWelcomeEmail(user.getUsername(), email);
+//            emailService.sendWelcomeEmail(user.getUsername(), email);
             // 缓存用户信息
             redisUtils.set(USER_CACHE_KEY + user.getId(), user, USER_CACHE_TIME);
             redisUtils.set(USER_CACHE_KEY + user.getUsername(), user, USER_CACHE_TIME);
@@ -308,7 +308,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         redisUtils.set(TOKEN_CACHE_KEY + user.getId(), token, TOKEN_CACHE_TIME);
         redisUtils.set(USER_CACHE_KEY + user.getUsername(), user, USER_CACHE_TIME);
         redisUtils.set(USER_CACHE_KEY + user.getId(), user, USER_CACHE_TIME);
-        emailService.sendWelcomeEmail(user.getUsername(), email);
+//        emailService.sendWelcomeEmail(user.getUsername(), email);
         return token;
     }
 

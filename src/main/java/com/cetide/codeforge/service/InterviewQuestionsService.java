@@ -26,4 +26,9 @@ public interface InterviewQuestionsService extends IService<InterviewQuestion> {
      * @param query 面试题查询对象
      */
     List<InterviewQuestion> getQuestionsByTopic(InterviewQuestionQuery query);
+
+    /**
+     * 随机获取面试题
+     */
+    List<InterviewQuestion> getRandomInterviewQuestions();
 }
