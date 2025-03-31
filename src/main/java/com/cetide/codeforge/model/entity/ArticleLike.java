@@ -3,7 +3,7 @@ package com.cetide.codeforge.model.entity;
 /**
  * 用户点赞
  */
-public class Like {
+public class ArticleLike {
     private Long id;
     private Long userId;
     private Long articleId;

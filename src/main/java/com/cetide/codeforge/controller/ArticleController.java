@@ -11,6 +11,7 @@ import com.cetide.codeforge.model.dto.ArticleSearchParam;
 import com.cetide.codeforge.model.dto.ArticleWithWeight;
 import com.cetide.codeforge.model.entity.Article;
 import com.cetide.codeforge.model.entity.ArticleActivityRecord;
+import com.cetide.codeforge.model.entity.ArticleLike;
 import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.service.ArticleActivityRecordService;
 import com.cetide.codeforge.service.ArticleSearchService;
@@ -60,7 +61,7 @@ public class ArticleController {
     private UserService userService;
 
     @Resource
-    ArticleLikeServiceImpl likeService;
+    private ArticleLikeServiceImpl likeService;
 
     /**
      * 文章点赞功能
@@ -68,7 +69,6 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     @ApiOperation("点赞")
     public ApiResponse<String> like(@PathVariable("articleId") Long articleId) throws ServiceException {
-
         likeService.like(articleId);
         return ApiResponse.success("点赞成功");
     }
@@ -187,10 +187,15 @@ public class ArticleController {
         }
         // 使用 Redis 的 INCR 命令来增加文章的阅读量
         redisTemplate.opsForValue().increment(VIEW_COUNT_PREFIX + id, 1);
-        // 打印当前文章的阅读量
-        Integer count = (Integer) redisTemplate.opsForValue().get(VIEW_COUNT_PREFIX + id);
-        if (count != null){
-            article.setViewCount(article.getViewCount() + count.longValue());
+        User currentUser = AuthContext.getCurrentUser();
+        if (currentUser != null){
+            LambdaQueryWrapper<ArticleLike> likeQueryWrapper = new LambdaQueryWrapper<>();
+            likeQueryWrapper.eq(ArticleLike::getUserId, currentUser.getId());
+            likeQueryWrapper.eq(ArticleLike::getArticleId, id);
+            ArticleLike one = likeService.getOne(likeQueryWrapper);
+            article.setLiked(one != null);
+        } else {
+            article.setLiked(false);
         }
         // 返回文章信息
         return ApiResponse.success(article);

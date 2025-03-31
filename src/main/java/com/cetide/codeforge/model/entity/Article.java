@@ -61,6 +61,9 @@ public class Article extends BaseEntity{
     @TableField(exist = false)
     private String userAvatar;
 
+    @TableField(exist = false)
+    private Boolean Liked;
+
     public Long getUserId() {
         return userId;
     }
@@ -211,5 +214,13 @@ public class Article extends BaseEntity{
 
     public void setUserAvatar(String userAvatar) {
         this.userAvatar = userAvatar;
+    }
+
+    public Boolean getLiked() {
+        return Liked;
+    }
+
+    public void setLiked(Boolean liked) {
+        Liked = liked;
     }
 }
