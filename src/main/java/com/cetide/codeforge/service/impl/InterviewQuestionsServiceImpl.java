@@ -22,10 +22,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 @Service
 public class InterviewQuestionsServiceImpl extends ServiceImpl<InterviewQuestionMapper, InterviewQuestion> implements InterviewQuestionsService {
 
+    private final InterviewQuestionMapper questionMapper;
 
-
-    @Autowired
-    private InterviewQuestionMapper questionMapper;
+    public InterviewQuestionsServiceImpl(InterviewQuestionMapper questionMapper) {
+        this.questionMapper = questionMapper;
+    }
 
     @Override
     public List<InterviewQuestion> getQuestionsByCategory(InterviewQuestionQuery query) {
@@ -41,5 +42,10 @@ public class InterviewQuestionsServiceImpl extends ServiceImpl<InterviewQuestion
         wrapper.eq("topic_id", query.getTopicId());
         List<InterviewQuestion> questions = questionMapper.selectList(wrapper);
         return questions;
+    }
+
+    @Override
+    public List<InterviewQuestion> getRandomInterviewQuestions() {
+        return questionMapper.getRandomInterviewQuestions(15);
     }
 }

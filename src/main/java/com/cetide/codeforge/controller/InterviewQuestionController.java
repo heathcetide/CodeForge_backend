@@ -7,6 +7,7 @@ import com.cetide.codeforge.exception.ResourceNotFoundException;
 import com.cetide.codeforge.model.entity.InterviewQuestion;
 import com.cetide.codeforge.model.entity.InterviewQuestionTopic;
 import com.cetide.codeforge.model.entity.user.User;
+import com.cetide.codeforge.model.vo.InterviewQuestionListVO;
 import com.cetide.codeforge.model.vo.InterviewQuestionTopicVO;
 import com.cetide.codeforge.model.vo.InterviewQuestionVO;
 import com.cetide.codeforge.service.InterviewQuestionTopicService;
@@ -40,6 +41,13 @@ public class InterviewQuestionController {
         this.userService = userService;
     }
 
+    @GetMapping("/list/{topicId}")
+    @ApiOperation("根据TopicId获取面试题列表")
+    public ApiResponse<List<InterviewQuestionListVO>> list(@PathVariable Long topicId) {
+        LambdaQueryWrapper<InterviewQuestion> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(InterviewQuestion::getTopicId, topicId);
+        return ApiResponse.success(interviewQuestionsService.list(queryWrapper).stream().map(interviewQuestion -> BeanUtil.toBean(interviewQuestion, InterviewQuestionListVO.class)).collect(Collectors.toList()));
+    }
 
     @GetMapping("/{id}")
     @ApiOperation("根据id查询面试题")

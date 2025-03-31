@@ -50,4 +50,10 @@ public interface InterviewQuestionMapper extends BaseMapper<InterviewQuestion> {
      */
     @Select("SELECT * FROM interview_question ${ew.customSqlSegment}")
     List<InterviewQuestion> selectList(@Param("ew") QueryWrapper<InterviewQuestion> queryWrapper);
+
+    /**
+     * 获取随机的15条面试题
+     */
+    @Select("SELECT * FROM interview_question ORDER BY RAND() LIMIT #{limit}")
+    List<InterviewQuestion> getRandomInterviewQuestions(int limit);
 }
