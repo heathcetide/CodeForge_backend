@@ -48,11 +48,11 @@ public class WebConfig extends WebMvcConfigurationSupport {
                 .addPathPatterns("/api/user-course/**")
                 .addPathPatterns("/api/courses/add/course/**")
                 .addPathPatterns("/api/chapters/**")
+                .addPathPatterns("/api/interview-submission/**").excludePathPatterns("/api/interview-submission/list/**")
                 .addPathPatterns("/api/users/info","/api/users/update","/api/users/update","/api/sql-runner/**");
         registry.addInterceptor(anonymousInterceptor)
                 .addPathPatterns("/api/courses/**")
                 .addPathPatterns("/api/articles/views/**");
-
         registry.addInterceptor(adminInterceptor)
                 .addPathPatterns("/api/admin/users/info");
    }

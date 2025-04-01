@@ -312,16 +312,16 @@ CREATE TABLE interview_question_topics
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) COMMENT '面试题专题表';
 
-CREATE TABLE interview_question_categories
+CREATE TABLE interview_question_submission
 (
-    category_id   INT PRIMARY KEY AUTO_INCREMENT COMMENT '类别ID',
-    category_name VARCHAR(255) NOT NULL COMMENT '类别名称',
-    create_by     INT COMMENT '创建人',
-    create_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_by     INT COMMENT '修改人',
-    update_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
-) COMMENT '面试题分类表';
-
+    id    INT PRIMARY KEY AUTO_INCREMENT COMMENT '回答ID',
+    question_id  INT NOT NULL COMMENT '面试题ID',
+    answer_text  TEXT NOT NULL COMMENT '答案内容',
+    create_by    INT COMMENT '创建人',
+    create_time  TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by    INT COMMENT '修改人',
+    update_time  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+) COMMENT '面试题答案记录表';
 
 INSERT INTO interview_question_categories (category_name, create_by, create_time, update_by, update_time)
 VALUES ('编程语言', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP),

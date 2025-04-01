@@ -47,21 +47,15 @@ public class AdminInterceptor implements HandlerInterceptor {
                 throw new AuthorizationException("token 无效或已过期");
             }
             String decryptedData;
-            // 2. 获取前端传来的加密数据，比如放在自定义请求头中 "X-Encrypted-Data"
             String AEncryptedData = request.getHeader("A-Encrypted-Data");
-            String REncryptedData = request.getHeader("R-Encrypted-Data");
             if (AEncryptedData == null || AEncryptedData.trim().isEmpty()) {
-                if (REncryptedData == null || REncryptedData.trim().isEmpty()){
-                    throw new AuthorizationException("token数据缺失");
-                }else{
-                    decryptedData = kmsService.decrypt(REncryptedData, "RSA");
-                }
-            }else {
+                throw new AuthorizationException("token数据缺失");
+            } else {
                 decryptedData = kmsService.decrypt(AEncryptedData, "AES");
             }
             // 此处可以对解密后的数据进行额外校验，比如时间戳、随机数等
             logger.info("解密后的数据：{}", decryptedData);
-            if (!decryptedData.equals(token)){
+            if (!decryptedData.equals(token)) {
                 throw new AuthorizationException("token数据有误");
             }
             // 3. 根据 token 获取用户信息
@@ -70,7 +64,7 @@ public class AdminInterceptor implements HandlerInterceptor {
             if (user == null) {
                 throw new AuthorizationException("用户不存在");
             }
-            if (!user.isAccountNonLocked()){
+            if (!user.isAccountNonLocked()) {
                 throw new AuthorizationException("账号已经封锁");
             }
             AuthContext.setCurrentUser(user);

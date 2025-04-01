@@ -4,17 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cetide.codeforge.common.auth.AuthContext;
-import com.cetide.codeforge.exception.BusinessException;
 import com.cetide.codeforge.exception.ResourceNotFoundException;
 import com.cetide.codeforge.model.dto.ArticleCreateRequest;
-import com.cetide.codeforge.model.dto.ArticleSearchParam;
 import com.cetide.codeforge.model.dto.ArticleWithWeight;
 import com.cetide.codeforge.model.entity.Article;
 import com.cetide.codeforge.model.entity.ArticleActivityRecord;
 import com.cetide.codeforge.model.entity.ArticleLike;
 import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.service.ArticleActivityRecordService;
-import com.cetide.codeforge.service.ArticleSearchService;
 import com.cetide.codeforge.service.ArticleService;
 import com.cetide.codeforge.service.UserService;
 import com.cetide.codeforge.service.impl.ArticleLikeServiceImpl;
@@ -25,43 +22,45 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
+import static com.cetide.codeforge.common.constants.ArticleConstants.ARTICLE_COMMENT_LIST;
 import static com.cetide.codeforge.common.constants.ArticleConstants.VIEW_COUNT_PREFIX;
 import static com.cetide.codeforge.util.algorithm.AlgorithmUtils.*;
 
+/**
+ * 文章模块
+ */
 @Api(tags = "文章管理")
 @RestController
 @RequestMapping("/api/articles")
 public class ArticleController {
 
-    @Resource
-    private ArticleService articleService;
+    private final ArticleService articleService;
 
-    @Resource
-    private ArticleSearchService articleSearchService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final ArticleActivityRecordService articleActivityRecordService;
 
-    @Resource
-    private ArticleActivityRecordService articleActivityRecordService;
+    private final UserService userService;
 
-    @Resource
-    private UserService userService;
+    private final ArticleLikeServiceImpl likeService;
 
-    @Resource
-    private ArticleLikeServiceImpl likeService;
+    public ArticleController(ArticleService articleService, RedisTemplate<String, Object> redisTemplate, ArticleActivityRecordService articleActivityRecordService, UserService userService, ArticleLikeServiceImpl likeService) {
+        this.articleService = articleService;
+        this.redisTemplate = redisTemplate;
+        this.articleActivityRecordService = articleActivityRecordService;
+        this.userService = userService;
+        this.likeService = likeService;
+    }
 
     /**
      * 文章点赞功能
@@ -162,12 +161,8 @@ public class ArticleController {
             }
             one.setComposeCount(one.getComposeCount() + 1);
             articleActivityRecordService.updateById(one);
-            // 获取当前日期作为 Redis 键
-            //String createArticleCount = LocalDate.now() + "_" + user.getId();
-            //redisTemplate.opsForValue().increment(createArticleCount, 1);
             return ApiResponse.success(id);
         } catch (Exception e) {
-            e.printStackTrace();
             return ApiResponse.error(500, "文章创建失败: " + e.getMessage());
         }
     }
@@ -179,7 +174,6 @@ public class ArticleController {
     @ApiOperation("根据ID获取文章")
     @GetMapping("/views/{id}")
     public ApiResponse<Article> getArticleById(@Parameter(description = "文章ID") @PathVariable Long id) {
-        // TODO 此处没有进行防刷控制
         // 获取文章
         Article article = articleService.getById(id);
         if (article == null){
@@ -197,7 +191,6 @@ public class ArticleController {
         } else {
             article.setLiked(false);
         }
-        // 返回文章信息
         return ApiResponse.success(article);
     }
 
@@ -236,26 +229,35 @@ public class ArticleController {
         return ApiResponse.success(articles);
     }
 
+    /**
+     * 根据推荐数量推荐相关文章
+     */
     @ApiOperation("根据推荐数量推荐相关文章")
     @GetMapping("/recommend")
     public ApiResponse<List<Article>> recommendArticles(
-            @Parameter(description = "推荐数量") @RequestParam(defaultValue = "10") Integer num) {
-        // 创建查询条件
-        LambdaQueryWrapper<Article> query = new LambdaQueryWrapper<>();
-        query.last("ORDER BY (like_count + share_count + view_count + comment_count) DESC");
-        // 查询前10篇文章
-        Page<Article> articlePage = articleService.page(new Page<>(1, num), query);
-        List<Article> articles = articlePage.getRecords();
-        for (Article article : articles){
-            LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(User::getId, article.getUserId());
-            User userById = userService.getOne(queryWrapper);
-            if (userById != null){
-                article.setUserAvatar(userById.getAvatar());
+            @Parameter(description = "推荐数量") @RequestParam(defaultValue = "8") Integer num) {
+        if (num > 20){
+            throw new IllegalStateException("接口参数错误");
+        }
+        List<Article> articles = (List<Article>) redisTemplate.opsForValue().get(ARTICLE_COMMENT_LIST + num);
+        if (articles == null){
+            LambdaQueryWrapper<Article> query = new LambdaQueryWrapper<>();
+            query.last("ORDER BY (like_count + share_count + view_count + comment_count) DESC");
+            Page<Article> articlePage = articleService.page(new Page<>(1, num), query);
+            articles = articlePage.getRecords();
+            for (Article article : articles){
+                LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.eq(User::getId, article.getUserId());
+                User userById = userService.getOne(queryWrapper);
+                if (userById != null){
+                    article.setUserAvatar(userById.getAvatar());
+                }
             }
+            redisTemplate.opsForValue().set(ARTICLE_COMMENT_LIST + num, articles, 10, TimeUnit.MINUTES);
         }
         return ApiResponse.success(articles);
     }
+
 
 
     @ApiOperation("根据目标文章 ID 和推荐数量推荐相关文章")
@@ -305,8 +307,6 @@ public class ArticleController {
                 .le(Article::getPublishedAt, endOfWeek);
 
         List<Article> articles = articleService.list(query);
-
-        // 初始化一个长度为7的数组，分别代表周一至周日的阅读总量
         List<Long> weeklyViews = new ArrayList<>(Arrays.asList(0L, 0L, 0L, 0L, 0L, 0L, 0L));
 
         // 遍历文章，根据 published_at 的日期对应到具体的星期，将 view_count 累加
