@@ -372,3 +372,112 @@ create table cetide_blog.short_link_group
         unique (gid, username)
 );
 
+
+-- 题目表
+create table if not exists algorithm_question
+(
+    id          bigint auto_increment comment 'id' primary key,
+    title       varchar(512)                       null comment '标题',
+    content     text                               null comment '内容',
+    tags        varchar(1024)                      null comment '标签列表（json 数组）',
+    answer      text                               null comment '题目答案',
+    submitNum   int      default 0                 not null comment '题目提交数',
+    acceptedNum int      default 0                 not null comment '题目通过数',
+    judgeCase   text                               null comment '判题用例（json 数组）',
+    judgeConfig text                               null comment '判题配置（json 对象）',
+    thumbNum    int      default 0                 not null comment '点赞数',
+    favourNum   int      default 0                 not null comment '收藏数',
+    userId      bigint                             not null comment '创建用户 id',
+    createTime  datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime  datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    isDelete    tinyint  default 0                 not null comment '是否删除',
+    index idx_userId (userId)
+    ) comment '算法题目表' collate = utf8mb4_unicode_ci;
+
+-- 题目提交表
+create table if not exists algorithm_question_submit
+(
+    id         bigint auto_increment comment 'id' primary key,
+    language   varchar(128)                       not null comment '编程语言',
+    code       text                               not null comment '用户代码',
+    judgeInfo  text                               null comment '判题信息（json 对象）',
+    status     int      default 0                 not null comment '判题状态（0 - 待判题、1 - 判题中、2 - 成功、3 - 失败）',
+    questionId bigint                             not null comment '题目 id',
+    userId     bigint                             not null comment '创建用户 id',
+    createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    isDelete   tinyint  default 0                 not null comment '是否删除',
+    index idx_questionId (questionId),
+    index idx_userId (userId)
+    ) comment '题目提交';
+
+
+
+
+-- 目标资产表
+CREATE TABLE target_asset (
+                              id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                              domain VARCHAR(255) COMMENT '域名',
+                              ip VARCHAR(50) COMMENT 'IP地址',
+                              status TINYINT COMMENT '状态',
+                              create_time DATETIME,
+                              update_time DATETIME
+);
+
+-- 扫描任务表
+CREATE TABLE scan_task (
+                           id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                           task_name VARCHAR(100) COMMENT '任务名称',
+                           task_type TINYINT COMMENT '任务类型：1-资产收集，2-漏洞扫描',
+                           target_id BIGINT COMMENT '目标ID',
+                           status TINYINT COMMENT '状态：0-待执行，1-执行中，2-已完成',
+                           create_time DATETIME,
+                           update_time DATETIME
+);
+
+-- 漏洞信息表
+CREATE TABLE vulnerability (
+                               id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                               task_id BIGINT COMMENT '关联任务ID',
+                               vuln_type VARCHAR(50) COMMENT '漏洞类型',
+                               vuln_level TINYINT COMMENT '漏洞等级',
+                               vuln_desc TEXT COMMENT '漏洞描述',
+                               create_time DATETIME
+);
+
+-- 网站信息表
+CREATE TABLE website_info (
+                              id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                              task_id BIGINT COMMENT '关联任务ID',
+                              url VARCHAR(255) COMMENT '网站URL',
+                              title VARCHAR(255) COMMENT '网站标题',
+                              description TEXT COMMENT '网站描述',
+                              keywords VARCHAR(500) COMMENT '关键词',
+                              server VARCHAR(100) COMMENT '服务器信息',
+                              framework VARCHAR(100) COMMENT '框架信息',
+                              links TEXT COMMENT '页面链接',
+                              emails TEXT COMMENT '邮箱信息',
+                              phones TEXT COMMENT '电话信息',
+                              images TEXT COMMENT '图片链接',
+                              videos TEXT COMMENT '视频链接',
+                              files TEXT COMMENT '文件链接',
+                              comics TEXT COMMENT '漫画图片链接',
+                              create_time DATETIME COMMENT '创建时间',
+                              KEY idx_task_id (task_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网站信息表';
+
+-- 资源下载表
+CREATE TABLE resource_download (
+                                   id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                                   task_id BIGINT COMMENT '关联任务ID',
+                                   resource_url VARCHAR(1000) COMMENT '资源URL',
+                                   resource_type VARCHAR(20) COMMENT '资源类型',
+                                   local_path VARCHAR(255) COMMENT '本地存储路径',
+                                   status TINYINT COMMENT '状态：0-待下载 1-下载中 2-已完成 3-失败',
+                                   error_msg VARCHAR(500) COMMENT '错误信息',
+                                   create_time DATETIME,
+                                   update_time DATETIME,
+                                   KEY idx_task_id (task_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='资源下载表';
+
+ALTER TABLE website_info ADD COLUMN download_stats TEXT;
