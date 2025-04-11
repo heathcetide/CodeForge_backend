@@ -1,5 +1,6 @@
 package com.cetide.codeforge.service.impl;
 
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -20,6 +21,7 @@ import com.cetide.codeforge.common.ApiResponse;
 import com.cetide.codeforge.util.PasswordEncoder;
 import com.cetide.codeforge.util.common.RedisUtils;
 import com.cetide.codeforge.util.SensitiveDataUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.*;
@@ -45,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 import static com.cetide.codeforge.common.constants.RoleConstants.USER;
 import static com.cetide.codeforge.common.constants.SystemConstants.BCRYPT_METHOD;
 import static com.cetide.codeforge.common.constants.UserConstants.*;
+import static com.cetide.codeforge.util.CosUtils.uploadFileByCos;
 
 
 @Service
@@ -637,20 +641,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 上传后的头像URL
      */
     @Override
-    public String uploadAvatar(MultipartFile file, String token) {
-        // 上传到云存储或本地存储
-//        String avatarUrl = fileStorageService.uploadFile(file, "avatars/");
+    public String uploadAvatar(MultipartFile file, String token) throws IOException {
+        // 检查上传的文件是否为空
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("文件为空");
+        }
 
+        // 校验文件类型，可以根据需要添加文件类型限制
+        String originalFilename = file.getOriginalFilename();
+        String extension = FilenameUtils.getExtension(originalFilename).toLowerCase();
+
+        // 生成唯一的文件名
+        String fileName = UUID.randomUUID() + "." + extension;
+        String imgUrl = uploadFileByCos(file, fileName);
         // 更新用户信息
         Long userId = jwtUtils.getUserIdFromToken(token);
         User user = getById(userId);
         if (user != null) {
-//            user.setAvatar(avatarUrl);
+            user.setAvatar(imgUrl);
             updateById(user);
         }
-
-//        return avatarUrl;
-        return "https://cetide-1325039295.cos.ap-chengdu.myqcloud.com/a3e4bf04-581d-4615-b3ca-f690ab88c8ebwordCloud-6984284909.png";
+        return imgUrl;
     }
 
     /**

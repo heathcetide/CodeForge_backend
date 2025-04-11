@@ -11,6 +11,7 @@ import com.cetide.codeforge.common.ApiResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public interface UserService extends IService<User> {
 
     void changePassword(String token, String oldPassword, String newPassword);
 
-    String uploadAvatar(MultipartFile file, String token);
+    String uploadAvatar(MultipartFile file, String token) throws IOException;
 
     void requestAccountDeletion(String token);
 

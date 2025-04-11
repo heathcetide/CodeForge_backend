@@ -262,15 +262,13 @@ public class UserController {
      * 上传头像
      *
      * @param file 文件
-     * @param token jwt
      * @return 上传头像
      */
     @PostMapping("/upload-avatar")
     @ApiOperation("上传头像")
     public ApiResponse<String> uploadAvatar(
-            @RequestParam("file") MultipartFile file,
-            @RequestHeader("Authorization") String token) {
-        String avatarUrl = userService.uploadAvatar(file, token);
+            @RequestParam("file") MultipartFile file) throws IOException {
+        String avatarUrl = userService.uploadAvatar(file, AuthContext.getCurrentToken());
         return ApiResponse.success(avatarUrl);
     }
 
