@@ -3,7 +3,7 @@ package com.cetide.codeforge.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
+import com.cetide.codeforge.common.constants.CommonConstant;
 import com.cetide.codeforge.exception.BusinessException;
 import com.cetide.codeforge.mapper.QuestionMapper;
 import com.cetide.codeforge.model.dto.question.QuestionQueryRequest;
@@ -13,7 +13,6 @@ import com.cetide.codeforge.model.vo.QuestionVO;
 import com.cetide.codeforge.model.vo.UserVO;
 import com.cetide.codeforge.service.QuestionService;
 import com.cetide.codeforge.service.UserService;
-import com.cetide.codeforge.common.constants.CommonConstant;
 import com.cetide.codeforge.util.SqlUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -22,7 +21,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,11 +39,13 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
 
     /**
      * 校验题目是否合法
+     * @param question
+     * @param add
      */
     @Override
     public void validQuestion(Question question, boolean add) {
         if (question == null) {
-            throw new BusinessException("PARAMS_ERROR");
+            throw new BusinessException("参数错误！");
         }
         String title = question.getTitle();
         String content = question.getContent();
@@ -50,10 +53,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         String answer = question.getAnswer();
         String judgeCase = question.getJudgeCase();
         String judgeConfig = question.getJudgeConfig();
-        // 创建时，参数不能为空
-        if (add) {
-            throw new BusinessException("PARAMS_ERROR");
-        }
         // 有参数则校验
         if (StringUtils.isNotBlank(title) && title.length() > 80) {
             throw new BusinessException("标题过长");
@@ -75,6 +74,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     /**
      * 获取查询包装类（用户根据哪些字段查询，根据前端传来的请求对象，得到 mybatis 框架支持的查询 QueryWrapper 类）
      *
+     * @param questionQueryRequest
+     * @return
      */
     @Override
     public QueryWrapper<Question> getQueryWrapper(QuestionQueryRequest questionQueryRequest) {
@@ -101,8 +102,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
             }
         }
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
-        queryWrapper.eq("isDelete", false);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "user_id", userId);
+        queryWrapper.eq("is_delete", false);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
         return queryWrapper;
@@ -117,7 +118,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         if (userId != null && userId > 0) {
             user = userService.getById(userId);
         }
-        if (user != null){
+        if (user != null) {
             UserVO userVO = new UserVO().toUserVO(user);
             questionVO.setUserVO(userVO);
         }
@@ -138,13 +139,15 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         // 填充信息
         List<QuestionVO> questionVOList = questionList.stream().map(question -> {
             QuestionVO questionVO = QuestionVO.objToVo(question);
+            questionVO.setId(String.valueOf(question.getId()));
             Long userId = question.getUserId();
             User user = null;
             if (userIdUserListMap.containsKey(userId)) {
                 user = userIdUserListMap.get(userId).get(0);
             }
-            if (user != null){
-                questionVO.setUserVO(new UserVO().toUserVO(user));
+            if (user != null) {
+                UserVO userVO = new UserVO().toUserVO(user);
+                questionVO.setUserVO(userVO);
             }
             return questionVO;
         }).collect(Collectors.toList());

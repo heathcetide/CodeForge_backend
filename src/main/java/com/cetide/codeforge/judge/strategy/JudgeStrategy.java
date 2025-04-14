@@ -1,6 +1,5 @@
 package com.cetide.codeforge.judge.strategy;
 
-
 import com.cetide.codeforge.judge.codesandbox.model.JudgeInfo;
 
 /**

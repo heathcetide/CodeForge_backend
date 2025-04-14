@@ -3,6 +3,7 @@ package com.cetide.codeforge.model.vo;
 import cn.hutool.json.JSONUtil;
 import com.cetide.codeforge.model.dto.question.JudgeConfig;
 import com.cetide.codeforge.model.entity.question.Question;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
@@ -17,7 +18,7 @@ public class QuestionVO implements Serializable {
     /**
      * id
      */
-    private Long id;
+    private String id;
 
     /**
      * 标题
@@ -32,7 +33,7 @@ public class QuestionVO implements Serializable {
     /**
      * 标签列表
      */
-    private List<String> tags;
+    private String tags;
 
     /**
      * 题目提交数
@@ -67,11 +68,13 @@ public class QuestionVO implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /**
@@ -91,10 +94,7 @@ public class QuestionVO implements Serializable {
         }
         Question question = new Question();
         BeanUtils.copyProperties(questionVO, question);
-        List<String> tagList = questionVO.getTags();
-        if (tagList != null) {
-            question.setTags(JSONUtil.toJsonStr(tagList));
-        }
+        question.setTags(questionVO.getTags());
         JudgeConfig voJudgeConfig = questionVO.getJudgeConfig();
         if (voJudgeConfig != null) {
             question.setJudgeConfig(JSONUtil.toJsonStr(voJudgeConfig));
@@ -114,8 +114,7 @@ public class QuestionVO implements Serializable {
         }
         QuestionVO questionVO = new QuestionVO();
         BeanUtils.copyProperties(question, questionVO);
-        List<String> tagList = JSONUtil.toList(question.getTags(), String.class);
-        questionVO.setTags(tagList);
+        questionVO.setTags(question.getTags());
         String judgeConfigStr = question.getJudgeConfig();
         questionVO.setJudgeConfig(JSONUtil.toBean(judgeConfigStr, JudgeConfig.class));
         return questionVO;
@@ -123,12 +122,11 @@ public class QuestionVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -148,11 +146,11 @@ public class QuestionVO implements Serializable {
         this.content = content;
     }
 
-    public List<String> getTags() {
+    public String getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(String tags) {
         this.tags = tags;
     }
 

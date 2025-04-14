@@ -2,7 +2,6 @@ package com.cetide.codeforge.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cetide.codeforge.model.dto.question.QuestionQueryRequest;
 import com.cetide.codeforge.model.entity.question.Question;
@@ -11,7 +10,7 @@ import com.cetide.codeforge.model.vo.QuestionVO;
 import javax.servlet.http.HttpServletRequest;
 
 /**
-* @author heatcetide
+* @author heathcetide
 */
 public interface QuestionService extends IService<Question> {
 

@@ -10,16 +10,16 @@
             <result property="content" column="content" jdbcType="VARCHAR"/>
             <result property="tags" column="tags" jdbcType="VARCHAR"/>
             <result property="answer" column="answer" jdbcType="VARCHAR"/>
-            <result property="submitNum" column="submitNum" jdbcType="INTEGER"/>
-            <result property="acceptedNum" column="acceptedNum" jdbcType="INTEGER"/>
-            <result property="judgeCase" column="judgeCase" jdbcType="VARCHAR"/>
-            <result property="judgeConfig" column="judgeConfig" jdbcType="VARCHAR"/>
-            <result property="thumbNum" column="thumbNum" jdbcType="INTEGER"/>
-            <result property="favourNum" column="favourNum" jdbcType="INTEGER"/>
-            <result property="userId" column="userId" jdbcType="BIGINT"/>
-            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
-            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+            <result property="submitNum" column="submit_num" jdbcType="INTEGER"/>
+            <result property="acceptedNum" column="accepted_num" jdbcType="INTEGER"/>
+            <result property="judgeCase" column="judge_case" jdbcType="VARCHAR"/>
+            <result property="judgeConfig" column="judge_config" jdbcType="VARCHAR"/>
+            <result property="thumbNum" column="thumb_num" jdbcType="INTEGER"/>
+            <result property="favourNum" column="favour_num" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">

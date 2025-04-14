@@ -13,6 +13,7 @@ public class QuestionSetQueryRequest extends PageRequest implements Serializable
     private Long id;
 
     private String name;
+
     private String description;
     /**
      * 标签列表

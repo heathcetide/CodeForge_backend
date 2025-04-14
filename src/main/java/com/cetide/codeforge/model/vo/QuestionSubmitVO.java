@@ -1,9 +1,10 @@
 package com.cetide.codeforge.model.vo;
 
-import cn.hutool.json.JSONUtil;
 
+import cn.hutool.json.JSONUtil;
 import com.cetide.codeforge.judge.codesandbox.model.JudgeInfo;
 import com.cetide.codeforge.model.entity.question.QuestionSubmit;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
@@ -52,11 +53,13 @@ public class QuestionSubmitVO implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /**

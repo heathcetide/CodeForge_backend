@@ -1,6 +1,7 @@
 package com.cetide.codeforge.model.vo;
 
 import com.cetide.codeforge.model.entity.question.QuestionSet;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
@@ -10,7 +11,7 @@ public class QuestionSetVO implements Serializable {
     /**
      * id
      */
-    private Long id;
+    private String id;
 
     /**
      * 标题
@@ -30,11 +31,13 @@ public class QuestionSetVO implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
 
@@ -62,11 +65,11 @@ public class QuestionSetVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

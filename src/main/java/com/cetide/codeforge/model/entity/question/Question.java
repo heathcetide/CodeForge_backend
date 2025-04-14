@@ -1,15 +1,16 @@
 package com.cetide.codeforge.model.entity.question;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 题目
- * @TableName algorithm_question
+ * @TableName question
  */
-@TableName(value ="algorithm_question")
+@TableName(value ="question")
 public class Question implements Serializable {
     /**
      * id
@@ -75,11 +76,13 @@ public class Question implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /**

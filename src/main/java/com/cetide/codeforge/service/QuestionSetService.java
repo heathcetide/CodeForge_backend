@@ -12,12 +12,11 @@ import com.cetide.codeforge.model.vo.QuestionSetVO;
 import javax.servlet.http.HttpServletRequest;
 
 /**
-* @author Lenovo
+* @author heathcetide
 */
 public interface QuestionSetService extends IService<QuestionSet> {
 
     void validQuestionSet(QuestionSet questionSet, boolean b);
-
 
     Page<QuestionSetVO> getQuestionVOPage(Page<QuestionSet> questionPage, HttpServletRequest request);
 

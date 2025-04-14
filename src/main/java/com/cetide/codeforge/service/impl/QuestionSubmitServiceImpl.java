@@ -3,7 +3,7 @@ package com.cetide.codeforge.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
+import com.cetide.codeforge.common.constants.CommonConstant;
 import com.cetide.codeforge.exception.BusinessException;
 import com.cetide.codeforge.judge.JudgeService;
 import com.cetide.codeforge.mapper.QuestionSubmitMapper;
@@ -18,7 +18,6 @@ import com.cetide.codeforge.model.vo.QuestionSubmitVO;
 import com.cetide.codeforge.service.QuestionService;
 import com.cetide.codeforge.service.QuestionSubmitService;
 import com.cetide.codeforge.service.UserService;
-import com.cetide.codeforge.common.constants.CommonConstant;
 import com.cetide.codeforge.util.SqlUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -50,10 +49,6 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
 
     /**
      * 提交题目
-     *
-     * @param questionSubmitAddRequest
-     * @param loginUser
-     * @return
      */
     @Override
     public long doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest, User loginUser) {
@@ -67,7 +62,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         // 判断实体是否存在，根据类别获取实体
         Question question = questionService.getById(questionId);
         if (question == null) {
-            throw new BusinessException("NOT_FOUND_ERROR");
+            throw new BusinessException("参数错误");
         }
         // 是否已提交题目
         long userId = loginUser.getId();

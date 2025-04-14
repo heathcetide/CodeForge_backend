@@ -1,6 +1,5 @@
 package com.cetide.codeforge.judge;
 
-
 import com.cetide.codeforge.judge.codesandbox.model.JudgeInfo;
 import com.cetide.codeforge.judge.strategy.DefaultJudgeStrategy;
 import com.cetide.codeforge.judge.strategy.JavaLanguageJudgeStrategy;

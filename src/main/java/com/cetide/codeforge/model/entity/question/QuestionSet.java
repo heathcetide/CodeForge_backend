@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,7 +13,7 @@ import java.util.Date;
  * 题目集
  * @TableName question_set
  */
-@TableName(value ="algorithm_question_set")
+@TableName(value ="question_set")
 public class QuestionSet implements Serializable {
     /**
      * id
@@ -37,21 +39,25 @@ public class QuestionSet implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /**
      * 创建用户 id
      */
+    @TableField("user_id")
     private Long userId;
 
     /**
      * 是否删除
      */
+    @TableField("is_delete")
     private Integer isDelete;
 
     @TableField(exist = false)

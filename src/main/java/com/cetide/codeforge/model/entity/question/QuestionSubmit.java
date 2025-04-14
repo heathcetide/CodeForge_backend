@@ -1,6 +1,7 @@
 package com.cetide.codeforge.model.entity.question;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.Date;
  * 题目提交
  * @TableName question_submit
  */
-@TableName(value ="algorithm_question_submit")
+@TableName(value ="question_submit")
 public class QuestionSubmit implements Serializable {
     /**
      * id
@@ -50,11 +51,13 @@ public class QuestionSubmit implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /**

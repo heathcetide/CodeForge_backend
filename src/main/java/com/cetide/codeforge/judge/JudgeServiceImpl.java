@@ -61,7 +61,7 @@ public class JudgeServiceImpl implements JudgeService {
         questionSubmitUpdate.setStatus(QuestionSubmitStatusEnum.RUNNING.getValue());
         boolean update = questionSubmitService.updateById(questionSubmitUpdate);
         if (!update) {
-            throw new BusinessException("题目状态更新错误");
+            throw new BusinessException( "题目状态更新错误");
         }
         // 4）调用沙箱，获取到执行结果
         CodeSandbox codeSandbox = CodeSandboxFactory.newInstance(type);
