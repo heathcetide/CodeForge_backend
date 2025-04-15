@@ -17,53 +17,48 @@ import com.cetide.codeforge.model.vo.QuestionVO;
 import com.cetide.codeforge.service.DailyQuestionService;
 import com.cetide.codeforge.service.QuestionService;
 import com.cetide.codeforge.service.QuestionSubmitService;
-import com.cetide.codeforge.service.UserService;
 import com.google.gson.Gson;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
 import java.util.List;
 
 /**
  * 题目接口
- *
  */
 @RestController
-@RequestMapping("/question")
+@RequestMapping("/api/question")
+@Api(tags = "oj题目模块")
 public class QuestionController {
 
-    @Resource
-    private QuestionService questionService;
+    private final QuestionService questionService;
 
-    @Resource
-    private UserService userService;
+    private final QuestionSubmitService questionSubmitService;
 
-    @Resource
-    private QuestionSubmitService questionSubmitService;
-
-    @Resource
-    private DailyQuestionService dailyQuestionService;
+    private final DailyQuestionService dailyQuestionService;
 
     private final static Gson GSON = new Gson();
+
+    public QuestionController(QuestionService questionService, QuestionSubmitService questionSubmitService, DailyQuestionService dailyQuestionService) {
+        this.questionService = questionService;
+        this.questionSubmitService = questionSubmitService;
+        this.dailyQuestionService = dailyQuestionService;
+    }
 
     /**
      * 创建
      */
     @PostMapping("/add")
-    public ApiResponse<Long> addQuestion(@RequestBody QuestionAddRequest questionAddRequest, HttpServletRequest request) {
+    @ApiOperation("新建题目")
+    public ApiResponse<Long> addQuestion(@RequestBody QuestionAddRequest questionAddRequest) {
         if (questionAddRequest == null) {
             throw new BusinessException("PARAMS_ERROR");
         }
         Question question = new Question();
         BeanUtils.copyProperties(questionAddRequest, question);
-        List<String> tags = questionAddRequest.getTags();
-        if (tags != null) {
-            question.setTags(GSON.toJson(tags));
-        }
         List<JudgeCase> judgeCase = questionAddRequest.getJudgeCase();
         if (judgeCase != null) {
             question.setJudgeCase(GSON.toJson(judgeCase));
@@ -78,7 +73,7 @@ public class QuestionController {
         question.setFavourNum(0);
         question.setThumbNum(0);
         boolean result = questionService.save(question);
-        if (!result){
+        if (!result) {
             throw new BusinessException("SAVE_ERROR");
         }
         long newQuestionId = question.getId();
@@ -87,13 +82,10 @@ public class QuestionController {
 
     /**
      * 删除
-     *
-     * @param deleteRequest
-     * @param request
-     * @return
      */
     @PostMapping("/delete")
-    public ApiResponse<Boolean> deleteQuestion(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
+    @ApiOperation("删除题目")
+    public ApiResponse<Boolean> deleteQuestion(@RequestBody DeleteRequest deleteRequest) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException("PARAMS_ERROR");
         }
@@ -101,34 +93,27 @@ public class QuestionController {
         long id = deleteRequest.getId();
         // 判断是否存在
         Question oldQuestion = questionService.getById(id);
-        if (oldQuestion == null){
+        if (oldQuestion == null) {
             throw new BusinessException("NOT_FOUND_ERROR");
         }
         // 仅本人或管理员可删除
         if (!oldQuestion.getUserId().equals(user.getId())) {
             throw new BusinessException("NO_AUTH_ERROR");
         }
-        boolean b = questionService.removeById(id);
-        return ApiResponse.success(b);
+        return ApiResponse.success(questionService.removeById(id));
     }
 
     /**
      * 更新（仅管理员）
-     *
-     * @param questionUpdateRequest
-     * @return
      */
     @PostMapping("/update")
+    @ApiOperation("更新题目")
     public ApiResponse<Boolean> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest) {
         if (questionUpdateRequest == null || questionUpdateRequest.getId() <= 0) {
             throw new BusinessException("PARAMS_ERROR");
         }
         Question question = new Question();
         BeanUtils.copyProperties(questionUpdateRequest, question);
-        List<String> tags = questionUpdateRequest.getTags();
-        if (tags != null) {
-            question.setTags(GSON.toJson(tags));
-        }
         List<JudgeCase> judgeCase = questionUpdateRequest.getJudgeCase();
         if (judgeCase != null) {
             question.setJudgeCase(GSON.toJson(judgeCase));
@@ -142,7 +127,7 @@ public class QuestionController {
         long id = questionUpdateRequest.getId();
         // 判断是否存在
         Question oldQuestion = questionService.getById(id);
-        if (oldQuestion == null){
+        if (oldQuestion == null) {
             throw new BusinessException("NOT_FOUND_ERROR");
         }
         boolean result = questionService.updateById(question);
@@ -151,12 +136,10 @@ public class QuestionController {
 
     /**
      * 根据 id 获取
-     *
-     * @param id
-     * @return
      */
     @GetMapping("/get")
-    public ApiResponse<Question> getQuestionById(long id, HttpServletRequest request) {
+    @ApiOperation("根据id获取[需要登录]")
+    public ApiResponse<Question> getQuestionById(long id) {
         if (id <= 0) {
             throw new BusinessException("PARAMS_ERROR");
         }
@@ -165,7 +148,6 @@ public class QuestionController {
             throw new BusinessException("NOT_FOUND_ERROR");
         }
         User loginUser = AuthContext.getCurrentUser();
-        // 不是本人或管理员，不能直接获取所有信息
         if (!question.getUserId().equals(loginUser.getId())) {
             throw new BusinessException("NO_AUTH_ERROR");
         }
@@ -174,11 +156,9 @@ public class QuestionController {
 
     /**
      * 根据 id 获取（脱敏）
-     *
-     * @param id
-     * @return
      */
     @GetMapping("/get/vo")
+    @ApiOperation("根据id获取（脱敏）[无需登录]")
     public ApiResponse<QuestionVO> getQuestionVOById(long id, HttpServletRequest request) {
         if (id <= 0) {
             throw new BusinessException("PARAMS_ERROR");
@@ -192,35 +172,59 @@ public class QuestionController {
 
     /**
      * 分页获取列表（封装类）
-     *
-     * @param questionQueryRequest
-     * @param request
-     * @return
      */
-    @PostMapping("/list/page/vo")
-    public ApiResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-                                                               HttpServletRequest request) {
-        long current = questionQueryRequest.getCurrent();
-        long size = questionQueryRequest.getPageSize();
+    @GetMapping("/list/page/vo")
+    @ApiOperation("分页获取列表（封装类）")
+    public ApiResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestParam(required = false) Long current,
+                                                              @RequestParam(required = false) Long pageSize,
+                                                              @RequestParam(required = false) String sortField,
+                                                              @RequestParam(required = false, defaultValue = "ascend") String sortOrder,
+                                                              @RequestParam(required = false) Long id,
+                                                              @RequestParam(required = false) String title,
+                                                              @RequestParam(required = false) String content,
+                                                              @RequestParam(required = false) List<String> tags,
+                                                              @RequestParam(required = false) String answer,
+                                                              @RequestParam(required = false) Long userId,
+                                                              HttpServletRequest request) {
+        // 默认值设置
+        if (current == null) {
+            current = 1L;
+        }
+        if (pageSize == null) {
+            pageSize = 10L;
+        }
+
         // 限制爬虫
-        if (size > 20){
+        if (pageSize > 20) {
             throw new BusinessException("PAGE_SIZE_ERROR");
         }
-        Page<Question> questionPage = questionService.page(new Page<>(current, size),
+
+        // 创建 QuestionQueryRequest 对象
+        QuestionQueryRequest questionQueryRequest = new QuestionQueryRequest();
+        questionQueryRequest.setCurrent(current);
+        questionQueryRequest.setPageSize(pageSize);
+        questionQueryRequest.setSortField(sortField);
+        questionQueryRequest.setSortOrder(sortOrder);
+        questionQueryRequest.setId(id);
+        questionQueryRequest.setTitle(title);
+        questionQueryRequest.setContent(content);
+        questionQueryRequest.setTags(tags);
+        questionQueryRequest.setAnswer(answer);
+        questionQueryRequest.setUserId(userId);
+
+        Page<Question> questionPage = questionService.page(new Page<>(current, pageSize),
                 questionService.getQueryWrapper(questionQueryRequest));
+
         return ApiResponse.success(questionService.getQuestionVOPage(questionPage, request));
     }
 
     /**
      * 分页获取当前用户创建的资源列表
-     *
-     * @param questionQueryRequest
-     * @param request
-     * @return
      */
     @PostMapping("/my/list/page/vo")
+    @ApiOperation("分页获取当前用户创建的资源列表")
     public ApiResponse<Page<QuestionVO>> listMyQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-                                                                 HttpServletRequest request) {
+                                                                HttpServletRequest request) {
         if (questionQueryRequest == null) {
             throw new BusinessException("PARAMS_ERROR");
         }
@@ -229,7 +233,7 @@ public class QuestionController {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
         // 限制爬虫
-        if (size > 20){
+        if (size > 20) {
             throw new BusinessException("PAGE_SIZE_ERROR");
         }
         Page<Question> questionPage = questionService.page(new Page<>(current, size),
@@ -239,14 +243,10 @@ public class QuestionController {
 
     /**
      * 分页获取题目列表（仅管理员）
-     *
-     * @param questionQueryRequest
-     * @param request
-     * @return
      */
     @PostMapping("/list/page")
-    public ApiResponse<Page<Question>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-                                                           HttpServletRequest request) {
+    @ApiOperation("分页获取题目列表（仅管理员）")
+    public ApiResponse<Page<Question>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
         Page<Question> questionPage = questionService.page(new Page<>(current, size),
@@ -254,17 +254,12 @@ public class QuestionController {
         return ApiResponse.success(questionPage);
     }
 
-    // endregion
-
     /**
      * 编辑（用户）
-     *
-     * @param questionEditRequest
-     * @param request
-     * @return
      */
     @PostMapping("/edit")
-    public ApiResponse<Boolean> editQuestion(@RequestBody QuestionEditRequest questionEditRequest, HttpServletRequest request) {
+    @ApiOperation("编辑（用户）")
+    public ApiResponse<Boolean> editQuestion(@RequestBody QuestionEditRequest questionEditRequest) {
         if (questionEditRequest == null || questionEditRequest.getId() <= 0) {
             throw new BusinessException("PARAMS_ERROR");
         }
@@ -288,7 +283,7 @@ public class QuestionController {
         long id = questionEditRequest.getId();
         // 判断是否存在
         Question oldQuestion = questionService.getById(id);
-        if (oldQuestion == null){
+        if (oldQuestion == null) {
             throw new BusinessException("NOT_FOUND_ERROR");
         }
         // 仅本人或管理员可编辑
@@ -301,33 +296,24 @@ public class QuestionController {
 
     /**
      * 提交题目
-     *
-     * @param questionSubmitAddRequest
-     * @param request
-     * @return 提交记录的 id
      */
     @PostMapping("/question_submit/do")
-    public ApiResponse<Long> doQuestionSubmit(@RequestBody QuestionSubmitAddRequest questionSubmitAddRequest,
-                                               HttpServletRequest request) {
+    @ApiOperation("提交题目")
+    public ApiResponse<Long> doQuestionSubmit(@RequestBody QuestionSubmitAddRequest questionSubmitAddRequest) {
         if (questionSubmitAddRequest == null || questionSubmitAddRequest.getQuestionId() <= 0) {
             throw new BusinessException("PARAMS_ERROR");
         }
-        // 登录才能点赞
-        final User loginUser = AuthContext.getCurrentUser();
+        User loginUser = AuthContext.getCurrentUser();
         long questionSubmitId = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, loginUser);
         return ApiResponse.success(questionSubmitId);
     }
 
     /**
      * 分页获取题目提交列表（除了管理员外，普通用户只能看到非答案、提交代码等公开信息）
-     *
-     * @param questionSubmitQueryRequest
-     * @param request
-     * @return
      */
     @PostMapping("/question_submit/list/page")
-    public ApiResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest,
-                                                                         HttpServletRequest request) {
+    @ApiOperation("分页获取题目提交列表")
+    public ApiResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest) {
         long current = questionSubmitQueryRequest.getCurrent();
         long size = questionSubmitQueryRequest.getPageSize();
         // 从数据库中查询原始的题目提交分页信息
@@ -338,15 +324,22 @@ public class QuestionController {
         return ApiResponse.success(questionSubmitService.getQuestionSubmitVOPage(questionSubmitPage, loginUser));
     }
 
+    /**
+     * 获取每日一题
+     */
     @GetMapping("/daily-question")
+    @ApiOperation("获取每日一题")
     public ApiResponse<DailyQuestionVO> getDailyQuestion() {
         // 假设每日题目只会有一个，查找当日题目
         return dailyQuestionService.getDailyQuestion();
     }
 
+    /**
+     * 获取所有的题目
+     */
     @GetMapping("/get/all")
+    @ApiOperation("获取所有的题目")
     public ApiResponse<List<Question>> getAllQuestions() {
         return ApiResponse.success(questionService.list());
     }
-
 }

@@ -6,8 +6,7 @@ import java.util.List;
 /**
  * 创建请求
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author heathcetide
  */
 public class QuestionAddRequest implements Serializable {
 
@@ -24,7 +23,7 @@ public class QuestionAddRequest implements Serializable {
     /**
      * 标签列表
      */
-    private List<String> tags;
+    private String tags;
 
     /**
      * 题目答案
@@ -59,11 +58,11 @@ public class QuestionAddRequest implements Serializable {
         this.content = content;
     }
 
-    public List<String> getTags() {
+    public String getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(String tags) {
         this.tags = tags;
     }
 

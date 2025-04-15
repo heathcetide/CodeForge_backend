@@ -107,3 +107,5 @@ cos:
   bucket: cetide-1325039295
   region: ap-chengdu
   app-id: 1325039295
+codesandbox:
+  type: remote

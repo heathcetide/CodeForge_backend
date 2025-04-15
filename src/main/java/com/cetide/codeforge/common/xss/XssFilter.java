@@ -1,4 +1,4 @@
-package com.cetide.blog.common.security.xss;
+package com.cetide.codeforge.common.xss;
 
 import com.cetide.codeforge.common.xss.XssHttpServletRequestWrapper;
 import org.springframework.core.Ordered;

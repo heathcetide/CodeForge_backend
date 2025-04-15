@@ -18,7 +18,7 @@ public class QuestionSetQueryRequest extends PageRequest implements Serializable
     /**
      * 标签列表
      */
-    private List<String> tags;
+    private String tags;
 
     /**
      * 创建用户 id
@@ -49,11 +49,11 @@ public class QuestionSetQueryRequest extends PageRequest implements Serializable
         this.description = description;
     }
 
-    public List<String> getTags() {
+    public String getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(String tags) {
         this.tags = tags;
     }
 

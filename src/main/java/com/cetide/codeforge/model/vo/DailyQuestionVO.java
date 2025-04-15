@@ -1,18 +1,16 @@
 package com.cetide.codeforge.model.vo;
 
-
-import com.cetide.codeforge.model.entity.question.Question;
-
 public class DailyQuestionVO {
-    private Question question;
+
+    private QuestionVO question;
 
     private String questionImg;
 
-    public Question getQuestion() {
+    public QuestionVO getQuestion() {
         return question;
     }
 
-    public void setQuestion(Question question) {
+    public void setQuestion(QuestionVO question) {
         this.question = question;
     }
 

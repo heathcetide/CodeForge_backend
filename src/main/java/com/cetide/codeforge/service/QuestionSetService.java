@@ -18,7 +18,7 @@ public interface QuestionSetService extends IService<QuestionSet> {
 
     void validQuestionSet(QuestionSet questionSet, boolean b);
 
-    Page<QuestionSetVO> getQuestionVOPage(Page<QuestionSet> questionPage, HttpServletRequest request);
+    Page<QuestionSetVO> getQuestionVOPage(Page<QuestionSet> questionPage);
 
     Wrapper<QuestionSet> getQueryWrapper(QuestionSetQueryRequest questionSetQueryRequest);
 }

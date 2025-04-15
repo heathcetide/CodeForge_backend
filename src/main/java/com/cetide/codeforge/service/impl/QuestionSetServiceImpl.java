@@ -66,7 +66,7 @@ implements QuestionSetService {
     }
 
     @Override
-    public Page<QuestionSetVO> getQuestionVOPage(Page<QuestionSet> questionPage, HttpServletRequest request) {
+    public Page<QuestionSetVO> getQuestionVOPage(Page<QuestionSet> questionPage) {
         List<QuestionSet> questionList = questionPage.getRecords();
         Page<QuestionSetVO> questionVOPage = new Page<>(questionPage.getCurrent(), questionPage.getSize(), questionPage.getTotal());
         if (CollectionUtils.isEmpty(questionList)) {
@@ -103,7 +103,6 @@ implements QuestionSetService {
         Long id = questionSetQueryRequest.getId();
         String title = questionSetQueryRequest.getName();
         String content = questionSetQueryRequest.getDescription();
-        List<String> tags = questionSetQueryRequest.getTags();
         Long userId = questionSetQueryRequest.getUserId();
         String sortField = questionSetQueryRequest.getSortField();
         String sortOrder = questionSetQueryRequest.getSortOrder();
@@ -111,11 +110,6 @@ implements QuestionSetService {
         // 拼接查询条件
         queryWrapper.like(StringUtils.isNotBlank(title), "name", title);
         queryWrapper.like(StringUtils.isNotBlank(content), "description", content);
-        if (CollectionUtils.isNotEmpty(tags)) {
-            for (String tag : tags) {
-                queryWrapper.like("tags", "\"" + tag + "\"");
-            }
-        }
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "user_id", userId);
         queryWrapper.eq("is_delete", false);

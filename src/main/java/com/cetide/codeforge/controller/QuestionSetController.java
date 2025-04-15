@@ -15,10 +15,7 @@ import com.cetide.codeforge.service.UserService;
 import com.google.gson.Gson;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -26,14 +23,11 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/question-set")
+@RequestMapping("/api/question-set")
 public class QuestionSetController {
 
     @Resource
     private QuestionSetService questionSetService;
-
-    @Resource
-    private UserService userService;
 
     private final static Gson GSON = new Gson();
 
@@ -67,21 +61,49 @@ public class QuestionSetController {
 
     /**
      * 分页获取列表（封装类）
-     *
-     * @param questionSetQueryRequest
-     * @param request
-     * @return
      */
-    @PostMapping("/list/page/vo")
-    public ApiResponse<Page<QuestionSetVO>> listQuestionVOByPage(@RequestBody QuestionSetQueryRequest questionSetQueryRequest,
-                                                                  HttpServletRequest request) {
-        long current = questionSetQueryRequest.getCurrent();
-        long size = questionSetQueryRequest.getPageSize();
-        if (size > 20){
+    @GetMapping("/list/page/vo")
+    public ApiResponse<Page<QuestionSetVO>> listQuestionSetVOByPage(
+            @RequestParam(required = false) Long current,
+            @RequestParam(required = false) Long pageSize,
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false, defaultValue = "ascend") String sortOrder,
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String tags,
+            @RequestParam(required = false) Long userId) {
+
+        // 默认值设置
+        if (current == null) {
+            current = 1L;
+        }
+        if (pageSize == null) {
+            pageSize = 10L;
+        }
+
+        // 限制分页大小
+        if (pageSize > 20) {
             throw new BusinessException("参数错误");
         }
-        Page<QuestionSet> questionPage = questionSetService.page(new Page<>(current, size),
+
+        // 创建 QuestionSetQueryRequest 对象
+        QuestionSetQueryRequest questionSetQueryRequest = new QuestionSetQueryRequest();
+        questionSetQueryRequest.setCurrent(current);
+        questionSetQueryRequest.setPageSize(pageSize);
+        questionSetQueryRequest.setSortField(sortField);
+        questionSetQueryRequest.setSortOrder(sortOrder);
+        questionSetQueryRequest.setId(id);
+        questionSetQueryRequest.setName(name);
+        questionSetQueryRequest.setDescription(description);
+        questionSetQueryRequest.setTags(tags);
+        questionSetQueryRequest.setUserId(userId);
+
+        // 查询数据
+        Page<QuestionSet> questionPage = questionSetService.page(new Page<>(current, pageSize),
                 questionSetService.getQueryWrapper(questionSetQueryRequest));
-        return ApiResponse.success(questionSetService.getQuestionVOPage(questionPage, request));
+
+        return ApiResponse.success(questionSetService.getQuestionVOPage(questionPage));
     }
+
 }
