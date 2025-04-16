@@ -49,6 +49,16 @@ public class QuestionSubmit implements Serializable {
     private Long userId;
 
     /**
+     * 判题用例
+     */
+    private String judgeCase;
+
+    /**
+     * 输出用例
+     */
+    private String outputCase;
+
+    /**
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -147,5 +157,21 @@ public class QuestionSubmit implements Serializable {
 
     public void setIsDelete(Integer isDelete) {
         this.isDelete = isDelete;
+    }
+
+    public String getJudgeCase() {
+        return judgeCase;
+    }
+
+    public void setJudgeCase(String judgeCase) {
+        this.judgeCase = judgeCase;
+    }
+
+    public String getOutputCase() {
+        return outputCase;
+    }
+
+    public void setOutputCase(String outputCase) {
+        this.outputCase = outputCase;
     }
 }

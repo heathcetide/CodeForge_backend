@@ -45,7 +45,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
                 .addPathPatterns("/api/chapters/**")
                 .addPathPatterns("/api/interview-submission/**").excludePathPatterns("/api/interview-submission/list/**")
                 .addPathPatterns("/api/users/info","/api/users/update","/api/users/update","/api/sql-runner/**")
-                .addPathPatterns("/api/question/add","/api/question/delete","/api/question/question_submit/do");
+                .addPathPatterns("/api/question/add","/api/question/delete","/api/question/question_submit/do","/api/question/submit/result/**");
         registry.addInterceptor(anonymousInterceptor)
                 .addPathPatterns("/api/courses/**")
                 .addPathPatterns("/api/articles/views/**");

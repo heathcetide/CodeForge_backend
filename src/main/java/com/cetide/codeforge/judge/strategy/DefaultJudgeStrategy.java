@@ -17,8 +17,6 @@ public class DefaultJudgeStrategy implements JudgeStrategy {
 
     /**
      * 执行判题
-     * @param judgeContext
-     * @return
      */
     @Override
     public JudgeInfo doJudge(JudgeContext judgeContext) {

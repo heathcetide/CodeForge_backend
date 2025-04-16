@@ -5,6 +5,8 @@ import com.cetide.codeforge.model.entity.question.QuestionSubmit;
 
 /**
  * 判题服务
+ *
+ * @author heathcetide
  */
 public interface JudgeService {
 

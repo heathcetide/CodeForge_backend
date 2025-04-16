@@ -4,13 +4,13 @@ import com.cetide.codeforge.judge.codesandbox.model.JudgeInfo;
 
 /**
  * 判题策略
+ *
+ * @author heathcetide
  */
 public interface JudgeStrategy {
 
     /**
      * 执行判题
-     * @param judgeContext
-     * @return
      */
     JudgeInfo doJudge(JudgeContext judgeContext);
 }

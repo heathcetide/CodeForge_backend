@@ -1,5 +1,6 @@
 package com.cetide.codeforge.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cetide.codeforge.common.ApiResponse;
 import com.cetide.codeforge.common.auth.AuthContext;
@@ -25,6 +26,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static com.cetide.codeforge.model.vo.QuestionSubmitVO.objToVo;
 
 /**
  * 题目接口
@@ -306,6 +309,20 @@ public class QuestionController {
         User loginUser = AuthContext.getCurrentUser();
         long questionSubmitId = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, loginUser);
         return ApiResponse.success(questionSubmitId);
+    }
+
+    /**
+     * 根据id获取提交结果
+     */
+    @GetMapping("/submit/result/{id}")
+    @ApiOperation("根据id获取提交结果")
+    public ApiResponse<QuestionSubmit> getQuestionSubmitVO(@PathVariable("id") long id) {
+        User loginUser = AuthContext.getCurrentUser();
+        LambdaQueryWrapper<QuestionSubmit> lambdaQueryWrapper = new LambdaQueryWrapper<QuestionSubmit>()
+                .eq(QuestionSubmit::getId, id)
+                .eq(QuestionSubmit::getUserId, loginUser.getId());
+        QuestionSubmit questionSubmit = questionSubmitService.getOne(lambdaQueryWrapper);
+        return ApiResponse.success(questionSubmit);
     }
 
     /**

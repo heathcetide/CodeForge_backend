@@ -10,8 +10,10 @@ import com.cetide.codeforge.model.entity.user.User;
 import com.cetide.codeforge.model.vo.QuestionSubmitVO;
 
 /**
-* @author heathcetide
-*/
+ * 题目提交服务
+ *
+ * @author heathcetide
+ */
 public interface QuestionSubmitService extends IService<QuestionSubmit> {
     
     /**
