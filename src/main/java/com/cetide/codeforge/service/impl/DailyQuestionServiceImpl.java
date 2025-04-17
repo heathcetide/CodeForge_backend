@@ -1,6 +1,8 @@
 package com.cetide.codeforge.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.cetide.codeforge.common.ApiResponse;
@@ -41,7 +43,11 @@ implements DailyQuestionService {
         if (dailyQuestion == null) {
             dailyQuestion = new DailyQuestion();
             dailyQuestion.setDate(new Date());
-            dailyQuestion.setQuestionId(questionService.list().get(0).getId());
+            LambdaQueryWrapper<Question> questionQueryWrapper = new LambdaQueryWrapper<>();
+            questionQueryWrapper.orderByAsc(Question::getId); // 先按任意字段排序（可选）
+            questionQueryWrapper.last("ORDER BY RAND() LIMIT 1"); // 核心修改点
+            Question question = questionService.getOne(questionQueryWrapper);
+            dailyQuestion.setQuestionId(question.getId());
             dailyQuestion.setQuestionImg("https://cetide-1325039295.cos.ap-chengdu.myqcloud.com/c0ca9d55-04a9-4014-b8d8-1a0174ffe46ewordCloud-1415979003.png");
             dailyQuestionMapper.insert(dailyQuestion);
         }
